@@ -14,11 +14,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Desactiva CSRF solo para desarrollo
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // Permite todo
+                        .anyRequest().permitAll() 
                 )
-                .httpBasic(Customizer.withDefaults()); // O puedes quitar esto si no usas auth básica
+                .httpBasic(Customizer.withDefaults()); 
 
         return http.build();
     }
