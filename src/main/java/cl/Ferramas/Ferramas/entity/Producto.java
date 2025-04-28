@@ -1,8 +1,10 @@
 package cl.Ferramas.Ferramas.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 
@@ -15,71 +17,60 @@ public class Producto {
     private Long productoId;
     @Column( nullable = false, unique = true)
     private String codigo;
-    @Column( nullable = false)
-    private String codigoFabricante;
     @Column( nullable = false, unique = true)
     private String nombre;
     @Column( nullable = false)
     private String descripcion;
-    @Column( nullable = false)
-    private String imagenUrl;
-    @Column( nullable = false)
-    private Double peso;
-    @Column( nullable = false)
-    private String dimensiones;
+
+    @Column(name = "precio_actual", nullable = false)
+    private Double precioActual;
+
     @Column(nullable = false)
-    private String unidadMedida;
-    private Boolean activo;
-    @Column( nullable = false)
-    private Date fechaCreacion;
+    private Double costo;
+    @Column(name = "garantia_meses")
+    private Integer garantiaMeses;
+    private Boolean activo = true;
 
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
 
-    @ManyToOne
+    @Column(name = "fecha_actualizacion")
+    private LocalDateTime fechaActualizacion = LocalDateTime.now();
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "marca_id", nullable = false)
+
     private Marca marca;
 
-    @ManyToMany
-    @JoinTable(
-            name = "producto_categoria",
-            joinColumns = @JoinColumn(name = "producto_id"),
-            inverseJoinColumns = @JoinColumn(name = "categoria_id")
-    )
-    private Set<Categoria> categorias = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
 
-    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
-    private List<Precio> precios = new ArrayList<>();
 
-    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
-    private List<Inventario> inventarios = new ArrayList<>();
+    @PreUpdate
+    public void preUpdate() {
+        this.fechaActualizacion = LocalDateTime.now();
+    }
 
-    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
-    private List<DetallePedido> detallesPedido = new ArrayList<>();
 
-    @OneToMany(mappedBy = "producto", fetch = FetchType.LAZY)
-    private List<MovimientoInventario> movimientos = new ArrayList<>();
-
-    public Producto(Long idProducto, String codigo, String codigoFabricante, String nombre, String descripcion, String imagenUrl, Double peso, String dimensiones, String unidadMedida, Boolean activo, Date fechaCreacion, Marca marca, Set<Categoria> categorias, List<Precio> precios, List<Inventario> inventarios, List<DetallePedido> detallesPedido, List<MovimientoInventario> movimientos) {
-        this.productoId = idProducto;
+    public Producto(Long productoId, String codigo, String nombre, String descripcion, Double precioActual, Double costo, Integer garantiaMeses, Boolean activo, LocalDateTime fechaCreacion, LocalDateTime fechaActualizacion, Marca marca, Categoria categoria) {
+        this.productoId = productoId;
         this.codigo = codigo;
-        this.codigoFabricante = codigoFabricante;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.imagenUrl = imagenUrl;
-        this.peso = peso;
-        this.dimensiones = dimensiones;
-        this.unidadMedida = unidadMedida;
+        this.precioActual = precioActual;
+        this.costo = costo;
+        this.garantiaMeses = garantiaMeses;
         this.activo = activo;
         this.fechaCreacion = fechaCreacion;
+        this.fechaActualizacion = fechaActualizacion;
         this.marca = marca;
-        this.categorias = categorias;
-        this.precios = precios;
-        this.inventarios = inventarios;
-        this.detallesPedido = detallesPedido;
-        this.movimientos = movimientos;
+        this.categoria = categoria;
     }
 
     public Producto() {
     }
+
 
     public Long getProductoId() {
         return productoId;
@@ -95,14 +86,6 @@ public class Producto {
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
-    }
-
-    public String getCodigoFabricante() {
-        return codigoFabricante;
-    }
-
-    public void setCodigoFabricante(String codigoFabricante) {
-        this.codigoFabricante = codigoFabricante;
     }
 
     public String getNombre() {
@@ -121,36 +104,28 @@ public class Producto {
         this.descripcion = descripcion;
     }
 
-    public String getImagenUrl() {
-        return imagenUrl;
+    public Double getPrecioActual() {
+        return precioActual;
     }
 
-    public void setImagenUrl(String imagenUrl) {
-        this.imagenUrl = imagenUrl;
+    public void setPrecioActual(Double precioActual) {
+        this.precioActual = precioActual;
     }
 
-    public Double getPeso() {
-        return peso;
+    public Double getCosto() {
+        return costo;
     }
 
-    public void setPeso(Double peso) {
-        this.peso = peso;
+    public void setCosto(Double costo) {
+        this.costo = costo;
     }
 
-    public String getDimensiones() {
-        return dimensiones;
+    public Integer getGarantiaMeses() {
+        return garantiaMeses;
     }
 
-    public void setDimensiones(String dimensiones) {
-        this.dimensiones = dimensiones;
-    }
-
-    public String getUnidadMedida() {
-        return unidadMedida;
-    }
-
-    public void setUnidadMedida(String unidadMedida) {
-        this.unidadMedida = unidadMedida;
+    public void setGarantiaMeses(Integer garantiaMeses) {
+        this.garantiaMeses = garantiaMeses;
     }
 
     public Boolean getActivo() {
@@ -161,12 +136,20 @@ public class Producto {
         this.activo = activo;
     }
 
-    public Date getFechaCreacion() {
+    public LocalDateTime getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(Date fechaCreacion) {
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
+    }
+
+    public LocalDateTime getFechaActualizacion() {
+        return fechaActualizacion;
+    }
+
+    public void setFechaActualizacion(LocalDateTime fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
     }
 
     public Marca getMarca() {
@@ -177,145 +160,13 @@ public class Producto {
         this.marca = marca;
     }
 
-    public Set<Categoria> getCategorias() {
-        return categorias;
+    public Categoria getCategoria() {
+        return categoria;
     }
 
-    public void setCategorias(Set<Categoria> categorias) {
-        this.categorias = categorias;
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
-
-    public List<Precio> getPrecios() {
-        return precios;
-    }
-
-    public void setPrecios(List<Precio> precios) {
-        this.precios = precios;
-    }
-
-    public List<Inventario> getInventarios() {
-        return inventarios;
-    }
-
-    public void setInventarios(List<Inventario> inventarios) {
-        this.inventarios = inventarios;
-    }
-
-    public List<DetallePedido> getDetallesPedido() {
-        return detallesPedido;
-    }
-
-    public void setDetallesPedido(List<DetallePedido> detallesPedido) {
-        this.detallesPedido = detallesPedido;
-    }
-
-    public List<MovimientoInventario> getMovimientos() {
-        return movimientos;
-    }
-
-    public void setMovimientos(List<MovimientoInventario> movimientos) {
-        this.movimientos = movimientos;
-    }
-
-    // MÉTODOS HELPER
-
-    /**
-     * Obtiene el precio actual (vigente) del producto
-     */
-    public Precio getPrecioActual() {
-        Date ahora = new Date();
-        Precio precioActual = null;
-        Date fechaMasReciente = null;
-
-        for (Precio precio : this.precios) {
-            // Verificar si el precio está vigente (inicio <= ahora < fin)
-            if (precio.getFechainicio().before(ahora) &&
-                    (precio.getFechafin() == null || precio.getFechafin().after(ahora))) {
-                // Si no hay precio o este precio es más reciente que el anterior
-                if (fechaMasReciente == null || precio.getFechainicio().after(fechaMasReciente)) {
-                    precioActual = precio;
-                    fechaMasReciente = precio.getFechainicio();
-                }
-            }
-        }
-
-        return precioActual;
-    }
-
-    /**
-     * Obtiene el valor del precio actual
-     */
-    public Double getPrecioActualValor() {
-        Precio precio = getPrecioActual();
-        return precio != null ? precio.getValor() : 0.0;
-    }
-
-    /**
-     * Registra un nuevo precio para el producto
-     */
-    public Precio registrarNuevoPrecio(Double valor, String moneda) {
-        // Finalizar el precio actual si existe
-        Precio precioActual = getPrecioActual();
-        if (precioActual != null) {
-            precioActual.setFechafin(new Date());
-        }
-
-        // Crear nuevo precio
-        Precio nuevoPrecio = new Precio();
-        nuevoPrecio.setProducto(this);
-        nuevoPrecio.setValor(valor);
-        nuevoPrecio.setMoneda(moneda);
-        nuevoPrecio.setFechainicio(new Date());
-
-        this.precios.add(nuevoPrecio);
-        return nuevoPrecio;
-    }
-
-    /**
-     * Agrega una categoría al producto
-     */
-    public void agregarCategoria(Categoria categoria) {
-        this.categorias.add(categoria);
-    }
-
-    /**
-     * Remueve una categoría del producto
-     */
-    public void removerCategoria(Categoria categoria) {
-        this.categorias.remove(categoria);
-    }
-
-    /**
-     * Verifica si el producto pertenece a una categoría
-     */
-    public boolean perteneceACategoria(Long categoriaId) {
-        for (Categoria categoria : this.categorias) {
-            if (categoria.getId().equals(categoriaId)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Verifica si el producto está activo
-     */
-    public boolean estaActivo() {
-        return this.activo != null && this.activo;
-    }
-
-    /**
-     * Verifica si el producto tiene stock en alguna sucursal
-     */
-    public boolean tieneStockEnAlgunaSucursal(List<Inventario> inventarios) {
-        for (Inventario inventario : inventarios) {
-            if (inventario.getProducto().getProductoId().equals(this.productoId) &&
-                    inventario.getStockActual() > 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }
+
 

@@ -1,5 +1,6 @@
 package cl.Ferramas.Ferramas.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 
@@ -12,39 +13,34 @@ import java.util.Date;
 public class Inventario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long inventarioId;
-    @Column( nullable = false)
-    private Long stockActual;
-    @Column( nullable = false)
-    private Long stockMinimo;
 
-    private Long stockMaximo;
-    private Date ultimaActualizacion;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sucursal_id", nullable = false)
+
     private Sucursal sucursal;
 
-    @ManyToOne
-    @JoinColumn(name = "ubicacion_id")
-    private UbicacionBodega ubicacion;
+    @Column(name = "stock_actual", nullable = false)
+    private Integer stockActual = 0;
 
-    public Inventario(Long id, Long stockActual, Integer stockMinimo, Long stockMaximo, Date ultimaActualizacion, Producto producto, Sucursal sucursal, UbicacionBodega ubicacion) {
-        this.inventarioId = id;
-        this.stockActual = stockActual;
-        this.stockMinimo = Long.valueOf(stockMinimo);
-        this.stockMaximo = stockMaximo;
-        this.ultimaActualizacion = ultimaActualizacion;
+    @Column(name = "stock_minimo", nullable = false)
+    private Integer stockMinimo = 5;
+
+    @Column(length = 50)
+    private String ubicacion;
+
+    public Inventario(Long inventarioId, Producto producto, Sucursal sucursal, Integer stockActual, Integer stockMinimo, String ubicacion) {
+        this.inventarioId = inventarioId;
         this.producto = producto;
         this.sucursal = sucursal;
+        this.stockActual = stockActual;
+        this.stockMinimo = stockMinimo;
         this.ubicacion = ubicacion;
     }
-
 
     public Inventario() {
     }
@@ -55,38 +51,6 @@ public class Inventario {
 
     public void setInventarioId(Long inventarioId) {
         this.inventarioId = inventarioId;
-    }
-
-    public Integer getStockActual() {
-        return Math.toIntExact(stockActual);
-    }
-
-    public void setStockActual(Long stockActual) {
-        this.stockActual = stockActual;
-    }
-
-    public Integer getStockMinimo() {
-        return Math.toIntExact(stockMinimo);
-    }
-
-    public void setStockMinimo(Integer stockMinimo) {
-        this.stockMinimo = Long.valueOf(stockMinimo);
-    }
-
-    public Integer getStockMaximo() {
-        return Math.toIntExact(stockMaximo);
-    }
-
-    public void setStockMaximo(Integer stockMaximo) {
-        this.stockMaximo = Long.valueOf(stockMaximo);
-    }
-
-    public Date getUltimaActualizacion() {
-        return ultimaActualizacion;
-    }
-
-    public void setUltimaActualizacion(Date ultimaActualizacion) {
-        this.ultimaActualizacion = ultimaActualizacion;
     }
 
     public Producto getProducto() {
@@ -105,65 +69,27 @@ public class Inventario {
         this.sucursal = sucursal;
     }
 
-    public UbicacionBodega getUbicacion() {
+    public Integer getStockActual() {
+        return stockActual;
+    }
+
+    public void setStockActual(Integer stockActual) {
+        this.stockActual = stockActual;
+    }
+
+    public Integer getStockMinimo() {
+        return stockMinimo;
+    }
+
+    public void setStockMinimo(Integer stockMinimo) {
+        this.stockMinimo = stockMinimo;
+    }
+
+    public String getUbicacion() {
         return ubicacion;
     }
 
-    public void setUbicacion(UbicacionBodega ubicacion) {
+    public void setUbicacion(String ubicacion) {
         this.ubicacion = ubicacion;
-    }
-
-
-    /**
-     * Verifica si hay suficiente stock para la cantidad solicitada
-     */
-    public boolean tieneStockDisponible(Long cantidad) {
-        return this.stockActual >= cantidad;
-    }
-
-    /**
-     * Verifica si el stock está por debajo del mínimo
-     */
-    public boolean requiereReposicion() {
-        return this.stockActual < this.stockMinimo;
-    }
-
-    /**
-     * Calcula la cantidad necesaria para llegar al stock máximo
-     */
-    public int cantidadParaReposicionCompleta() {
-        if (this.stockMaximo == null) {
-            return Math.toIntExact(this.stockMinimo * 2 - this.stockActual);
-        }
-        return Math.toIntExact(this.stockMaximo - this.stockActual);
-    }
-
-    /**
-     * Actualiza el stock y la fecha de actualización
-     */
-    public void actualizarStock(Long nuevoStock) {
-        this.stockActual = nuevoStock;
-        this.ultimaActualizacion = new Date();
-    }
-
-    /**
-     * Incrementa el stock en la cantidad especificada
-     */
-    public void incrementarStock(Long cantidad) {
-        this.stockActual += cantidad;
-        this.ultimaActualizacion = new Date();
-    }
-
-    /**
-     * disminuye el stock en la cantidad especificada si hay suficiente stock
-     * @return true si se pudo decrementar, false si no hay suficiente stock
-     */
-    public boolean disminuirStock(Long cantidad) {
-        if (tieneStockDisponible(cantidad)) {
-            this.stockActual -= cantidad;
-            this.ultimaActualizacion = new Date();
-            return true;
-        }
-        return false;
     }
 }

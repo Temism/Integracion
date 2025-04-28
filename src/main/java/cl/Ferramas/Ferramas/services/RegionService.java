@@ -20,8 +20,8 @@ public class RegionService {
         return regionRep.findAll();
     }
 
-    public Optional<Region> BuscarRegionPorId(Long pagoId){
-        return regionRep.findById(pagoId);
+    public Optional<Region> BuscarRegionPorId(Long regionId){
+        return regionRep.findById(regionId);
     }
 
     public Region guardarRegion(Region region) {

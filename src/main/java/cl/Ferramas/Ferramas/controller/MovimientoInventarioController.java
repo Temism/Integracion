@@ -1,9 +1,9 @@
 package cl.Ferramas.Ferramas.controller;
 
 
-import cl.Ferramas.Ferramas.entity.MetodoPago;
+
 import cl.Ferramas.Ferramas.entity.MovimientoInventario;
-import cl.Ferramas.Ferramas.services.MetodoPagoService;
+
 import cl.Ferramas.Ferramas.services.MovimientoInventarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -1,10 +1,11 @@
 package cl.Ferramas.Ferramas.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "pago")
@@ -12,64 +13,42 @@ public class Pago {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long pagoId;
 
-    @Column( nullable = false)
-    private BigDecimal monto;
-
-    @Column( nullable = false)
-    private String moneda = "CLP";
-
-
-    private Date fechaPago;
-
-
-    private String transaccionId;
-
-
-    private String webpayToken;
-
-
-    private String autorizacionCodigo;
-
-
-    private Date fechaConfirmacion;
-
-
-    private String notas;
-
-    @ManyToOne
-    @JoinColumn(name = "usuario_confirmacion_id")
-    private Usuario usuarioConfirmacion;
-
-    @ManyToOne
-    @JoinColumn(name = "estado_pago_id", nullable = false)
-    private EstadoPago estadoPago;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pedido_id", nullable = false)
     private Pedido pedido;
 
-    @ManyToOne
-    @JoinColumn(name = "metodo_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "metodo_pago_id", nullable = false)
     private MetodoPago metodoPago;
 
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal monto;
 
-    public Pago(Long id, BigDecimal pago, String moneda, Date fechaPago, String transaccionId, String webpayToken, String autorizacionCodigo, Date fechaConfirmacion, String notas, Usuario usuarioConfirmacion, EstadoPago estadoPago, Pedido pedido, MetodoPago metodoPago) {
+    @Column(name = "fecha_pago")
+    private LocalDateTime fechaPago = LocalDateTime.now();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estado_id", nullable = false)
+    private EstadoPago estado;
+
+    @Column(name = "codigo_transaccion", length = 100)
+    private String codigoTransaccion;
+
+    @Column(name = "datos_transaccion")
+    private String datosTransaccion;
+
+
+    public Pago(Long id, Pedido pedido, MetodoPago metodoPago, BigDecimal monto, LocalDateTime fechaPago, EstadoPago estado, String codigoTransaccion, String datosTransaccion) {
         this.pagoId = id;
-        monto = pago;
-        this.moneda = moneda;
-        this.fechaPago = fechaPago;
-        this.transaccionId = transaccionId;
-        this.webpayToken = webpayToken;
-        this.autorizacionCodigo = autorizacionCodigo;
-        this.fechaConfirmacion = fechaConfirmacion;
-        this.notas = notas;
-        this.usuarioConfirmacion = usuarioConfirmacion;
-        this.estadoPago = estadoPago;
         this.pedido = pedido;
         this.metodoPago = metodoPago;
+        this.monto = monto;
+        this.fechaPago = fechaPago;
+        this.estado = estado;
+        this.codigoTransaccion = codigoTransaccion;
+        this.datosTransaccion = datosTransaccion;
     }
 
     public Pago() {
@@ -81,86 +60,6 @@ public class Pago {
 
     public void setPagoId(Long pagoId) {
         this.pagoId = pagoId;
-    }
-
-    public BigDecimal getMonto() {
-        return monto;
-    }
-
-    public void setMonto(BigDecimal monto) {
-        this.monto = monto;
-    }
-
-    public String getMoneda() {
-        return moneda;
-    }
-
-    public void setMoneda(String moneda) {
-        this.moneda = moneda;
-    }
-
-    public Date getFechaPago() {
-        return fechaPago;
-    }
-
-    public void setFechaPago(Date fechaPago) {
-        this.fechaPago = fechaPago;
-    }
-
-    public String getTransaccionId() {
-        return transaccionId;
-    }
-
-    public void setTransaccionId(String transaccionId) {
-        this.transaccionId = transaccionId;
-    }
-
-    public String getWebpayToken() {
-        return webpayToken;
-    }
-
-    public void setWebpayToken(String webpayToken) {
-        this.webpayToken = webpayToken;
-    }
-
-    public String getAutorizacionCodigo() {
-        return autorizacionCodigo;
-    }
-
-    public void setAutorizacionCodigo(String autorizacionCodigo) {
-        this.autorizacionCodigo = autorizacionCodigo;
-    }
-
-    public Date getFechaConfirmacion() {
-        return fechaConfirmacion;
-    }
-
-    public void setFechaConfirmacion(Date fechaConfirmacion) {
-        this.fechaConfirmacion = fechaConfirmacion;
-    }
-
-    public String getNotas() {
-        return notas;
-    }
-
-    public void setNotas(String notas) {
-        this.notas = notas;
-    }
-
-    public Usuario getUsuarioConfirmacion() {
-        return usuarioConfirmacion;
-    }
-
-    public void setUsuarioConfirmacion(Usuario usuarioConfirmacion) {
-        this.usuarioConfirmacion = usuarioConfirmacion;
-    }
-
-    public EstadoPago getEstadoPago() {
-        return estadoPago;
-    }
-
-    public void setEstadoPago(EstadoPago estadoPago) {
-        this.estadoPago = estadoPago;
     }
 
     public Pedido getPedido() {
@@ -179,65 +78,43 @@ public class Pago {
         this.metodoPago = metodoPago;
     }
 
-    // MÉTODOS HELPER
-
-    /**
-     * Verifica si el pago está completado
-     */
-    public boolean estaCompletado() {
-        return this.estadoPago != null && "COMPLETADO".equals(this.estadoPago.getNombre());
+    public BigDecimal getMonto() {
+        return monto;
     }
 
-    /**
-     * Verifica si el pago está pendiente
-     */
-    public boolean estaPendiente() {
-        return this.estadoPago != null && "PENDIENTE".equals(this.estadoPago.getNombre());
+    public void setMonto(BigDecimal monto) {
+        this.monto = monto;
     }
 
-    /**
-     * Verifica si el pago está rechazado
-     */
-    public boolean estaRechazado() {
-        return this.estadoPago != null && "RECHAZADO".equals(this.estadoPago.getNombre());
+    public LocalDateTime getFechaPago() {
+        return fechaPago;
     }
 
-    /**
-     * Marca el pago como completado
-     */
-    public void confirmarPago(Usuario usuario, String codigoAutorizacion) {
-        // Actualizar estado
-        // Aquí se debería obtener el estado "COMPLETADO" de la base de datos
-        EstadoPago estadoCompletado = new EstadoPago();
-        estadoCompletado.setNombre("COMPLETADO");
-        this.estadoPago = estadoCompletado;
-
-        // Registrar confirmación
-        this.usuarioConfirmacion = usuario;
-        this.fechaConfirmacion = new Date();
-        this.autorizacionCodigo = codigoAutorizacion;
+    public void setFechaPago(LocalDateTime fechaPago) {
+        this.fechaPago = fechaPago;
     }
 
-    /**
-     * Marca el pago como rechazado
-     */
-    public void rechazarPago(String motivo) {
-        // Actualizar estado
-        // Aquí se debería obtener el estado "RECHAZADO" de la base de datos
-        EstadoPago estadoRechazado = new EstadoPago();
-        estadoRechazado.setNombre("RECHAZADO");
-        this.estadoPago = estadoRechazado;
-
-        this.notas = motivo;
+    public EstadoPago getEstado() {
+        return estado;
     }
 
-    /**
-     * Obtiene la descripción del pago para comprobantes
-     */
-    public String getDescripcionComprobante() {
-        return "Pago #" + this.pagoId +
-                " - Pedido #" + this.pedido.getPedidoId() +
-                " - " + this.metodoPago.getNombre() +
-                " - " + this.monto + " " + this.moneda;
+    public void setEstado(EstadoPago estado) {
+        this.estado = estado;
+    }
+
+    public String getCodigoTransaccion() {
+        return codigoTransaccion;
+    }
+
+    public void setCodigoTransaccion(String codigoTransaccion) {
+        this.codigoTransaccion = codigoTransaccion;
+    }
+
+    public String getDatosTransaccion() {
+        return datosTransaccion;
+    }
+
+    public void setDatosTransaccion(String datosTransaccion) {
+        this.datosTransaccion = datosTransaccion;
     }
 }

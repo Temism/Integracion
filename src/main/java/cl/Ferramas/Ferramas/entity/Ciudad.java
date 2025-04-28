@@ -1,6 +1,8 @@
 package cl.Ferramas.Ferramas.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -8,7 +10,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "ciudad")
+@Table(name = "ciudades")
 public class Ciudad  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,27 +21,20 @@ public class Ciudad  {
 
     private String nombre;
 
-    @ManyToOne
-    @JoinColumn( nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "region_id", nullable = false)
     private Region region;
 
-    @OneToMany(mappedBy = "ciudad", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ciudad", cascade = CascadeType.ALL)
     private List<Comuna> comunas = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ciudad", fetch = FetchType.LAZY)
-    private List<Direccion> direcciones = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ciudad", fetch = FetchType.LAZY)
-    private List<Sucursal> sucursales = new ArrayList<>();
-
-
-    public Ciudad(Long ciudadId, String nombre, Region region, List<Comuna> comunas, List<Direccion> direcciones, List<Sucursal> sucursales) {
+    public Ciudad(Long ciudadId, String nombre, Region region, List<Comuna> comunas) {
         this.ciudadId = ciudadId;
         this.nombre = nombre;
         this.region = region;
         this.comunas = comunas;
-        this.direcciones = direcciones;
-        this.sucursales = sucursales;
+
     }
 
     public Ciudad() {
@@ -73,23 +68,4 @@ public class Ciudad  {
         return comunas;
     }
 
-    public void setComunas(List<Comuna> comunas) {
-        this.comunas = comunas;
-    }
-
-    public List<Direccion> getDirecciones() {
-        return direcciones;
-    }
-
-    public void setDirecciones(List<Direccion> direcciones) {
-        this.direcciones = direcciones;
-    }
-
-    public List<Sucursal> getSucursales() {
-        return sucursales;
-    }
-
-    public void setSucursales(List<Sucursal> sucursales) {
-        this.sucursales = sucursales;
-    }
 }

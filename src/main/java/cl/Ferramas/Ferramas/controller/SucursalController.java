@@ -1,9 +1,9 @@
 package cl.Ferramas.Ferramas.controller;
 
 
-import cl.Ferramas.Ferramas.entity.MetodoPago;
+
 import cl.Ferramas.Ferramas.entity.Sucursal;
-import cl.Ferramas.Ferramas.services.MetodoPagoService;
+
 import cl.Ferramas.Ferramas.services.SucursalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

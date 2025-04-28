@@ -21,8 +21,8 @@ public class RolService {
         return rolRep.findAll();
     }
 
-    public Optional<Rol> BuscarRolPorId(Long pagoId){
-        return rolRep.findById(pagoId);
+    public Optional<Rol> BuscarRolPorId(Long rolId){
+        return rolRep.findById(rolId);
     }
 
     public Rol guardarRol(Rol rol) {

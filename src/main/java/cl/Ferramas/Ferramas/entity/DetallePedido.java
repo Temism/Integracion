@@ -1,6 +1,7 @@
 package cl.Ferramas.Ferramas.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -11,35 +12,39 @@ import java.math.BigDecimal;
 public class DetallePedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long detallePedidoId;
-    @Column( nullable = false)
-    private Long cantidad;
-    @Column(nullable = false)
-    private BigDecimal precioUnitario;
 
-    private BigDecimal descuento;
-    @Column( nullable = false)
-    private BigDecimal subtotal;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pedido_id", nullable = false)
     private Pedido pedido;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
+    @Column(nullable = false)
+    private Integer cantidad;
 
-    public DetallePedido(Long id, Long cantidad, BigDecimal precioUnitario, BigDecimal descuento, BigDecimal subtotal, Pedido pedido, Producto producto) {
-        this.detallePedidoId = id;
-        this.cantidad = cantidad;
-        this.precioUnitario = precioUnitario;
-        this.descuento = descuento;
-        this.subtotal = subtotal;
+    @Column(name = "precio_unitario", nullable = false, precision = 12, scale = 2)
+    private BigDecimal precioUnitario;
+
+    @Column(name = "descuento_unitario", precision = 12, scale = 2)
+    private BigDecimal descuentoUnitario = BigDecimal.ZERO;
+
+    @Column(name = "total_linea", nullable = false, precision = 12, scale = 2)
+    private BigDecimal totalLinea;
+
+
+    public DetallePedido(Long detallePedidoId, Pedido pedido, Producto producto, Integer cantidad, BigDecimal precioUnitario, BigDecimal descuentoUnitario, BigDecimal totalLinea) {
+        this.detallePedidoId = detallePedidoId;
         this.pedido = pedido;
         this.producto = producto;
+        this.cantidad = cantidad;
+        this.precioUnitario = precioUnitario;
+        this.descuentoUnitario = descuentoUnitario;
+        this.totalLinea = totalLinea;
     }
+
 
     public DetallePedido() {
     }
@@ -50,38 +55,6 @@ public class DetallePedido {
 
     public void setDetallePedidoId(Long detallePedidoId) {
         this.detallePedidoId = detallePedidoId;
-    }
-
-    public Long getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(Long cantidad) {
-        this.cantidad = cantidad;
-    }
-
-    public BigDecimal getPrecioUnitario() {
-        return precioUnitario;
-    }
-
-    public void setPrecioUnitario(BigDecimal precioUnitario) {
-        this.precioUnitario = precioUnitario;
-    }
-
-    public BigDecimal getDescuento() {
-        return descuento;
-    }
-
-    public void setDescuento(BigDecimal descuento) {
-        this.descuento = descuento;
-    }
-
-    public BigDecimal getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(BigDecimal subtotal) {
-        this.subtotal = subtotal;
     }
 
     public Pedido getPedido() {
@@ -98,6 +71,38 @@ public class DetallePedido {
 
     public void setProducto(Producto producto) {
         this.producto = producto;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public BigDecimal getPrecioUnitario() {
+        return precioUnitario;
+    }
+
+    public void setPrecioUnitario(BigDecimal precioUnitario) {
+        this.precioUnitario = precioUnitario;
+    }
+
+    public BigDecimal getDescuentoUnitario() {
+        return descuentoUnitario;
+    }
+
+    public void setDescuentoUnitario(BigDecimal descuentoUnitario) {
+        this.descuentoUnitario = descuentoUnitario;
+    }
+
+    public BigDecimal getTotalLinea() {
+        return totalLinea;
+    }
+
+    public void setTotalLinea(BigDecimal totalLinea) {
+        this.totalLinea = totalLinea;
     }
 }
 

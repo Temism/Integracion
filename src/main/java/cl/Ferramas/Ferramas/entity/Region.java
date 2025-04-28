@@ -1,6 +1,7 @@
 package cl.Ferramas.Ferramas.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "region")
+@Table(name = "regiones")
 public class Region {
 
     @Id
@@ -16,23 +17,19 @@ public class Region {
     private Long regionId;
     @Column( nullable = false)
     private String nombre;
+    private String codigo;
+    private String ordinal;
 
-    @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
     private List<Ciudad> ciudades = new ArrayList<>();
 
-    @OneToMany(mappedBy = "region", fetch = FetchType.LAZY)
-    private List<Direccion> direcciones = new ArrayList<>();
 
-    @OneToMany(mappedBy = "region",fetch = FetchType.LAZY)
-    private List<Sucursal> sucursales = new ArrayList<>();
-
-
-    public Region(Long id, String nombre, List<Ciudad> ciudades, List<Direccion> direcciones, List<Sucursal> sucursales) {
-        this.regionId = id;
+    public Region(Long regionId, String nombre, String codigo, String ordinal, List<Ciudad> ciudades) {
+        this.regionId = regionId;
         this.nombre = nombre;
+        this.codigo = codigo;
+        this.ordinal = ordinal;
         this.ciudades = ciudades;
-        this.direcciones = direcciones;
-        this.sucursales = sucursales;
     }
 
     public Region() {
@@ -54,6 +51,22 @@ public class Region {
         this.nombre = nombre;
     }
 
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getOrdinal() {
+        return ordinal;
+    }
+
+    public void setOrdinal(String ordinal) {
+        this.ordinal = ordinal;
+    }
+
     public List<Ciudad> getCiudades() {
         return ciudades;
     }
@@ -61,20 +74,5 @@ public class Region {
     public void setCiudades(List<Ciudad> ciudades) {
         this.ciudades = ciudades;
     }
-
-    public List<Direccion> getDirecciones() {
-        return direcciones;
-    }
-
-    public void setDirecciones(List<Direccion> direcciones) {
-        this.direcciones = direcciones;
-    }
-
-    public List<Sucursal> getSucursales() {
-        return sucursales;
-    }
-
-    public void setSucursales(List<Sucursal> sucursales) {
-        this.sucursales = sucursales;
-    }
 }
+

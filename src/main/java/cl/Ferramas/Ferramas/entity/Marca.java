@@ -1,6 +1,7 @@
 package cl.Ferramas.Ferramas.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -13,24 +14,24 @@ public class Marca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long marcaId;
-    @Column( nullable = false)
+
+    @Column(nullable = false, length = 50)
     private String nombre;
-    private String logoUrl;
+
+    private String descripcion;
 
     @OneToMany(mappedBy = "marca")
     private List<Producto> productos = new ArrayList<>();
 
-
-    public Marca(Long id, String nombre, String logoUrl, List<Producto> productos) {
-        this.marcaId = id;
+    public Marca(Long marcaId, String nombre, String descripcion, List<Producto> productos) {
+        this.marcaId = marcaId;
         this.nombre = nombre;
-        this.logoUrl = logoUrl;
+        this.descripcion = descripcion;
         this.productos = productos;
     }
 
     public Marca() {
     }
-
 
     public Long getMarcaId() {
         return marcaId;
@@ -48,12 +49,12 @@ public class Marca {
         this.nombre = nombre;
     }
 
-    public String getLogoUrl() {
-        return logoUrl;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setLogoUrl(String logoUrl) {
-        this.logoUrl = logoUrl;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public List<Producto> getProductos() {

@@ -1,9 +1,7 @@
 package cl.Ferramas.Ferramas.services;
 
-import cl.Ferramas.Ferramas.entity.Precio;
 import cl.Ferramas.Ferramas.entity.Producto;
 
-import cl.Ferramas.Ferramas.repository.PrecioRep;
 import cl.Ferramas.Ferramas.repository.ProductoRep;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +16,20 @@ public class ProductoService {
 
 
     private final ProductoRep productoRepository;
-    private final PrecioRep precioRepository;
+
 
     @Autowired
-    public ProductoService(ProductoRep productoRepository, PrecioRep precioRepository) {
+    public ProductoService(ProductoRep productoRepository) {
         this.productoRepository = productoRepository;
-        this.precioRepository = precioRepository;
+
     }
 
     public List<Producto> BuscarTodosProductos() {
         return productoRepository.findAll();
     }
 
-    public Optional<Producto> BuscarPorId(Long id) {
-        return productoRepository.findById(id);
+    public Optional<Producto> BuscarPorId(Long productoId) {
+        return productoRepository.findById(productoId);
     }
 
     public Producto GuardarProducto(Producto producto) {

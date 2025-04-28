@@ -1,8 +1,7 @@
 package cl.Ferramas.Ferramas.controller;
 
-import cl.Ferramas.Ferramas.entity.Ciudad;
+
 import cl.Ferramas.Ferramas.entity.Comuna;
-import cl.Ferramas.Ferramas.services.CiudadService;
 import cl.Ferramas.Ferramas.services.ComunaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

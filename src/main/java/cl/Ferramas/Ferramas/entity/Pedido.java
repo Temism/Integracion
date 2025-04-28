@@ -1,11 +1,12 @@
 package cl.Ferramas.Ferramas.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -15,98 +16,86 @@ import java.util.ArrayList;
 public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long pedidoId;
 
-    private Date fechaPedido;
-    @Column( nullable = false)
-    private String tipoentrega;
-    @Column( nullable = false)
-    private Date fechaEstimadaEntrega;
-    @Column( nullable = false)
-    private BigDecimal subtotal;
+    @Column(name = "codigo_pedido", nullable = false, unique = true, length = 20)
+    private String codigoPedido;
 
-    private BigDecimal descuento;
-    @Column( nullable = false)
-    private BigDecimal impuestoIva;
-    @Column( nullable = false)
-    private BigDecimal total;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private Usuario cliente;
 
-    private String comentario;
-
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
-
-    @ManyToOne
-    @JoinColumn(name = "sucursal_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sucursal_id")
     private Sucursal sucursal;
 
-    @ManyToOne
-    @JoinColumn(name = "estado_pedido_id", nullable = false)
+    @Column(name = "fecha_pedido", nullable = false)
+    private LocalDateTime fechaPedido = LocalDateTime.now();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estado_id", nullable = false)
     private EstadoPedido estado;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tipo_entrega_id", nullable = false)
     private TipoEntrega tipoEntrega;
 
-    @ManyToOne
-    @JoinColumn(name = "direccion_entrega_id")
-    private Direccion direccionEntrega;
+    private String direccionEntrega;
 
-    @ManyToOne
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal subtotal;
+
+    @Column(precision = 12, scale = 2)
+    private BigDecimal descuento = BigDecimal.ZERO;
+
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal iva;
+
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal total;
+
+    private String notas;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendedor_id")
     private Usuario vendedor;
 
-    @ManyToOne
-    @JoinColumn(name = "bodeguero_id")
-    private Usuario bodeguero;
-
-    @ManyToOne
-    @JoinColumn(name = "contador_id")
-    private Usuario contador;
-
-
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DetallePedido> detalles = new ArrayList<>();
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
-    private List<HistorialEstadoPedido> historialEstados = new ArrayList<>();
-
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "pedido")
     private List<Pago> pagos = new ArrayList<>();
 
     @OneToMany(mappedBy = "pedido")
-    private List<ReferenciaMovimiento> referencias = new ArrayList<>();
+    private List<HistorialEstadoPedido> historialEstados = new ArrayList<>();
+
+    @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
+    private Despacho despacho;
 
 
-    public Pedido(Long id, Date fechaPedido, String tipoEntrega, Date fechaEstimadaEntrega, BigDecimal subtotal, BigDecimal descuento, BigDecimal impuestoIva, BigDecimal total, String comentario, Usuario usuario, Sucursal sucursal, EstadoPedido estado, cl.Ferramas.Ferramas.entity.TipoEntrega tipoEntrega1, Direccion direccionEntrega, Usuario vendedor, Usuario bodeguero, Usuario contador, List<DetallePedido> detalles, List<HistorialEstadoPedido> historialEstados, List<Pago> pagos, List<ReferenciaMovimiento> referencias) {
+    public Pedido(Long id, String codigoPedido, Usuario cliente, Sucursal sucursal, LocalDateTime fechaPedido, EstadoPedido estado, TipoEntrega tipoEntrega, String direccionEntrega, BigDecimal subtotal, BigDecimal descuento, BigDecimal iva, BigDecimal total, String notas, Usuario vendedor, List<DetallePedido> detalles, List<Pago> pagos, List<HistorialEstadoPedido> historialEstados, Despacho despacho) {
         this.pedidoId = id;
+        this.codigoPedido = codigoPedido;
+        this.cliente = cliente;
+        this.sucursal = sucursal;
         this.fechaPedido = fechaPedido;
-        tipoentrega = tipoEntrega;
-        this.fechaEstimadaEntrega = fechaEstimadaEntrega;
+        this.estado = estado;
+        this.tipoEntrega = tipoEntrega;
+        this.direccionEntrega = direccionEntrega;
         this.subtotal = subtotal;
         this.descuento = descuento;
-        this.impuestoIva = impuestoIva;
+        this.iva = iva;
         this.total = total;
-        this.comentario = comentario;
-        this.usuario = usuario;
-        this.sucursal = sucursal;
-        this.estado = estado;
-        this.tipoEntrega = tipoEntrega1;
-        this.direccionEntrega = direccionEntrega;
+        this.notas = notas;
         this.vendedor = vendedor;
-        this.bodeguero = bodeguero;
-        this.contador = contador;
         this.detalles = detalles;
-        this.historialEstados = historialEstados;
         this.pagos = pagos;
-        this.referencias = referencias;
+        this.historialEstados = historialEstados;
+        this.despacho = despacho;
     }
 
     public Pedido() {
     }
-
 
     public Long getPedidoId() {
         return pedidoId;
@@ -116,96 +105,60 @@ public class Pedido {
         this.pedidoId = pedidoId;
     }
 
-    public Date getFechaPedido() {
+    public String getCodigoPedido() {
+        return codigoPedido;
+    }
+
+    public void setCodigoPedido(String codigoPedido) {
+        this.codigoPedido = codigoPedido;
+    }
+
+    public Usuario getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Usuario cliente) {
+        this.cliente = cliente;
+    }
+
+    public Sucursal getSucursal() {
+        return sucursal;
+    }
+
+    public void setSucursal(Sucursal sucursal) {
+        this.sucursal = sucursal;
+    }
+
+    public LocalDateTime getFechaPedido() {
         return fechaPedido;
     }
 
-    public void setFechaPedido(Date fechaPedido) {
+    public void setFechaPedido(LocalDateTime fechaPedido) {
         this.fechaPedido = fechaPedido;
     }
 
-    public String getTipoentrega() {
-        return tipoentrega;
+    public EstadoPedido getEstado() {
+        return estado;
     }
 
-    public void setTipoentrega(cl.Ferramas.Ferramas.entity.TipoEntrega tipoentrega) {
-        this.tipoEntrega = tipoentrega;
+    public void setEstado(EstadoPedido estado) {
+        this.estado = estado;
     }
 
-    public Direccion getDireccionEntrega() {
+    public TipoEntrega getTipoEntrega() {
+        return tipoEntrega;
+    }
+
+    public void setTipoEntrega(TipoEntrega tipoEntrega) {
+        this.tipoEntrega = tipoEntrega;
+    }
+
+    public String getDireccionEntrega() {
         return direccionEntrega;
     }
 
-    public void setDireccionEntrega(Direccion direccionEntrega) {
+    public void setDireccionEntrega(String direccionEntrega) {
         this.direccionEntrega = direccionEntrega;
-    }
-
-    public Usuario getVendedor() {
-        return vendedor;
-    }
-
-    public void setVendedor(Usuario vendedor) {
-        this.vendedor = vendedor;
-    }
-
-    public Usuario getBodeguero() {
-        return bodeguero;
-    }
-
-    public void setBodeguero(Usuario bodeguero) {
-        this.bodeguero = bodeguero;
-    }
-
-    public Usuario getContador() {
-        return contador;
-    }
-
-    public void setContador(Usuario contador) {
-        this.contador = contador;
-    }
-
-    public List<DetallePedido> getDetalles() {
-        return detalles;
-    }
-
-    public void setDetalles(List<DetallePedido> detalles) {
-        this.detalles = detalles;
-    }
-
-    public List<HistorialEstadoPedido> getHistorialEstados() {
-        return historialEstados;
-    }
-
-    public void setHistorialEstados(List<HistorialEstadoPedido> historialEstados) {
-        this.historialEstados = historialEstados;
-    }
-
-    public List<Pago> getPagos() {
-        return pagos;
-    }
-
-    public void setPagos(List<Pago> pagos) {
-        this.pagos = pagos;
-    }
-
-    public List<ReferenciaMovimiento> getReferencias() {
-        return referencias;
-    }
-
-    public void setReferencias(List<ReferenciaMovimiento> referencias) {
-        this.referencias = referencias;
-    }
-
-    public void setTipoEntrega(String tipoEntrega) {
-        tipoentrega = tipoEntrega;
-    }
-
-    public Date getFechaEstimadaEntrega() {
-        return fechaEstimadaEntrega;
-    }
-
-    public void setFechaEstimadaEntrega(Date fechaEstimadaEntrega) {
-        this.fechaEstimadaEntrega = fechaEstimadaEntrega;
     }
 
     public BigDecimal getSubtotal() {
@@ -224,12 +177,12 @@ public class Pedido {
         this.descuento = descuento;
     }
 
-    public BigDecimal getImpuestoIva() {
-        return impuestoIva;
+    public BigDecimal getIva() {
+        return iva;
     }
 
-    public void setImpuestoIva(BigDecimal impuestoIva) {
-        this.impuestoIva = impuestoIva;
+    public void setIva(BigDecimal iva) {
+        this.iva = iva;
     }
 
     public BigDecimal getTotal() {
@@ -240,152 +193,51 @@ public class Pedido {
         this.total = total;
     }
 
-    public String getComentario() {
-        return comentario;
+    public String getNotas() {
+        return notas;
     }
 
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
+    public void setNotas(String notas) {
+        this.notas = notas;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public Usuario getVendedor() {
+        return vendedor;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setVendedor(Usuario vendedor) {
+        this.vendedor = vendedor;
     }
 
-    public Sucursal getSucursal() {
-        return sucursal;
+    public List<DetallePedido> getDetalles() {
+        return detalles;
     }
 
-    public void setSucursal(Sucursal sucursal) {
-        this.sucursal = sucursal;
+    public void setDetalles(List<DetallePedido> detalles) {
+        this.detalles = detalles;
     }
 
-    public EstadoPedido getEstado() {
-        return estado;
+    public List<Pago> getPagos() {
+        return pagos;
     }
 
-    public void setEstado(EstadoPedido estado) {
-        this.estado = estado;
+    public void setPagos(List<Pago> pagos) {
+        this.pagos = pagos;
     }
 
-
-    /**
-     * Agrega un nuevo detalle al pedido y recalcula los totales
-     */
-    public void agregarDetalle(Producto producto, Long cantidad, Double precioUnitario) {
-        DetallePedido detalle = new DetallePedido();
-        detalle.setPedido(this);
-        detalle.setProducto(producto);
-        detalle.setCantidad(cantidad);
-        detalle.setPrecioUnitario(BigDecimal.valueOf(precioUnitario));
-
-        // Calcular subtotal del detalle
-        Double subtotalDetalle = precioUnitario * cantidad;
-        detalle.setSubtotal(BigDecimal.valueOf(subtotalDetalle));
-
-        // Agregar el detalle a la lista
-        this.detalles.add(detalle);
-
-        // Recalcular totales del pedido
-        recalcularTotales();
+    public List<HistorialEstadoPedido> getHistorialEstados() {
+        return historialEstados;
     }
 
-    /**
-     * Recalcula subtotal, impuesto y total del pedido
-     */
-    public void recalcularTotales() {
-        // Calcular subtotal sumando todos los detalles
-        this.subtotal = BigDecimal.ZERO;
-        for (DetallePedido detalle : this.detalles) {
-            this.subtotal = this.subtotal.add(detalle.getSubtotal());
-        }
-
-        // Aplicar descuento si existe
-        if (this.descuento == null) {
-            this.descuento = BigDecimal.ZERO;
-        }
-
-        // Calcular monto después de descuento
-        BigDecimal montoTrasDescuento = this.subtotal.subtract(this.descuento);
-
-        // Calcular impuesto (19% en Chile por ejemplo)
-        BigDecimal tasaImpuesto = new BigDecimal("0.19");
-        this.impuestoIva = montoTrasDescuento.multiply(tasaImpuesto).setScale(2, RoundingMode.HALF_UP);
-
-        // Calcular total
-        this.total = montoTrasDescuento.add(this.impuestoIva);
+    public void setHistorialEstados(List<HistorialEstadoPedido> historialEstados) {
+        this.historialEstados = historialEstados;
     }
 
-    /**
-     * Verifica si el pedido puede pasar al estado especificado
-     */
-    public boolean puedeTransicionarA(EstadoPedido nuevoEstado) {
-        // Lógica para validar transiciones permitidas
-        // Por ejemplo: No se puede pasar de "Entregado" a "En Preparación"
-
-        // Ejemplo simple:
-        if (this.estado.getNombre().equals("CANCELADO")) {
-            return false; // No se puede cambiar un pedido cancelado
-        }
-
-        if (this.estado.getNombre().equals("ENTREGADO") &&
-                !nuevoEstado.getNombre().equals("FINALIZADO") &&
-                !nuevoEstado.getNombre().equals("CANCELADO")) {
-            return false;
-        }
-
-        return true;
+    public Despacho getDespacho() {
+        return despacho;
     }
 
-    /**
-     * Cambia el estado del pedido y registra el cambio en el historial
-     */
-    public HistorialEstadoPedido cambiarEstado(EstadoPedido nuevoEstado, Usuario usuario, String comentario) {
-        if (!puedeTransicionarA(nuevoEstado)) {
-            throw new IllegalStateException("No se puede cambiar al estado solicitado");
-        }
-
-        this.estado = nuevoEstado;
-
-        // Crear registro histórico
-        HistorialEstadoPedido historial = new HistorialEstadoPedido();
-        historial.setPedido(this);
-        historial.setEstado(nuevoEstado);
-        historial.setUsuario(usuario);
-        historial.setFechaCambio(new Date());
-        historial.setComentario(comentario);
-
-        return historial;
-    }
-
-    /**
-     * Verifica si el pedido tiene todos sus pagos completados
-     */
-    public boolean estaPagado(List<Pago> pagos) {
-        // Sumar todos los pagos asociados a este pedido
-        BigDecimal totalPagado = BigDecimal.ZERO;
-        for (Pago pago : pagos) {
-            if (pago.getPedido().getPedidoId().equals(this.pedidoId) &&
-                    pago.getEstadoPago().getNombre().equalsIgnoreCase("COMPLETADO")) {
-                totalPagado = totalPagado.add(pago.getMonto());
-            }
-        }
-
-        // Comparar con el total del pedido con margen de error (epsilon)
-        BigDecimal epsilon = new BigDecimal("0.01");
-        BigDecimal diferencia = this.total.subtract(totalPagado).abs();
-
-        return diferencia.compareTo(epsilon) <= 0;
-    }
-    public void setEstadoPedido(EstadoPedido estadoInicial) {
-        
-    }
-
-    public void setFechaEntregaEstimada(Date date) {
-
+    public void setDespacho(Despacho despacho) {
+        this.despacho = despacho;
     }
 }

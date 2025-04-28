@@ -1,6 +1,8 @@
 package cl.Ferramas.Ferramas.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -13,82 +15,49 @@ public class Sucursal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long sucursalId;
     @Column( nullable = false)
     private String nombre;
     @Column( nullable = false)
-    private String calle;
-    @Column( nullable = false)
-    private String numero;
-
+    private String direccion;
     @Column(name = "telefono_sucursal")
     private String telefono;
     @Column(name = "email_sucursal")
     private String email;
-    private String horario;
-    private Boolean esBodegaCentral;
 
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comuna_id", nullable = false)
+    @JsonBackReference
     private Comuna comuna;
 
-    @ManyToOne
-    @JoinColumn(name = "ciudad_id", nullable = false)
-    private Ciudad ciudad;
 
-    @ManyToOne
-    @JoinColumn(name = "region_id", nullable = false)
-    private Region region;
+    @OneToMany(mappedBy = "sucursal")
+    private List<Usuario> usuarios = new ArrayList<>();
 
-
-    @OneToMany(mappedBy = "sucursal",fetch = FetchType.LAZY)
-    private List<UbicacionBodega> ubicaciones = new ArrayList<>();
-
-    @OneToMany(mappedBy = "sucursal",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sucursal")
     private List<Inventario> inventarios = new ArrayList<>();
 
-    @OneToMany(mappedBy = "sucursal",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "sucursal")
     private List<Pedido> pedidos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "sucursal",fetch = FetchType.LAZY)
-    private List<MovimientoInventario> movimientosOrigen = new ArrayList<>();
 
-    @OneToMany(mappedBy = "sucursalDestino",fetch = FetchType.LAZY)
-    private List<MovimientoInventario> movimientosDestino = new ArrayList<>();
-
-
-    public Sucursal(Long id, String nombre, String calle, String numero, String telefono, String email, String horario, Boolean esBodegaCentral, Comuna comuna, Ciudad ciudad, Region region, List<UbicacionBodega> ubicaciones, List<Inventario> inventarios, List<Pedido> pedidos, List<MovimientoInventario> movimientosOrigen, List<MovimientoInventario> movimientosDestino) {
-        this.sucursalId = id;
+    public Sucursal(Long sucursalId, String nombre, String direccion,  String telefono, String email,  Comuna comuna, List<Usuario> usuarios, List<Inventario> inventarios, List<Pedido> pedidos) {
+        this.sucursalId = sucursalId;
         this.nombre = nombre;
-        this.calle = calle;
-        this.numero = numero;
+        this.direccion = direccion;
         this.telefono = telefono;
         this.email = email;
-        this.horario = horario;
-        this.esBodegaCentral = esBodegaCentral;
         this.comuna = comuna;
-        this.ciudad = ciudad;
-        this.region = region;
-        this.ubicaciones = ubicaciones;
+        this.usuarios = usuarios;
         this.inventarios = inventarios;
         this.pedidos = pedidos;
-        this.movimientosOrigen = movimientosOrigen;
-        this.movimientosDestino = movimientosDestino;
     }
 
     public Sucursal() {
     }
 
 
-    public Boolean getEsBodegaCentral() {
-        return esBodegaCentral;
-    }
 
-    public void setEsBodegaCentral(Boolean esBodegaCentral) {
-        this.esBodegaCentral = esBodegaCentral;
-    }
 
     public Long getSucursalId() {
         return sucursalId;
@@ -106,21 +75,14 @@ public class Sucursal {
         this.nombre = nombre;
     }
 
-    public String getCalle() {
-        return calle;
+    public String getDireccion() {
+        return direccion;
     }
 
-    public void setCalle(String calle) {
-        this.calle = calle;
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
     }
 
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
 
     public String getTelefono() {
         return telefono;
@@ -138,13 +100,7 @@ public class Sucursal {
         this.email = email;
     }
 
-    public String getHorario() {
-        return horario;
-    }
 
-    public void setHorario(String horario) {
-        this.horario = horario;
-    }
 
     public Comuna getComuna() {
         return comuna;
@@ -154,29 +110,7 @@ public class Sucursal {
         this.comuna = comuna;
     }
 
-    public Ciudad getCiudad() {
-        return ciudad;
-    }
 
-    public void setCiudad(Ciudad ciudad) {
-        this.ciudad = ciudad;
-    }
-
-    public Region getRegion() {
-        return region;
-    }
-
-    public void setRegion(Region region) {
-        this.region = region;
-    }
-
-    public List<UbicacionBodega> getUbicaciones() {
-        return ubicaciones;
-    }
-
-    public void setUbicaciones(List<UbicacionBodega> ubicaciones) {
-        this.ubicaciones = ubicaciones;
-    }
 
     public List<Inventario> getInventarios() {
         return inventarios;
@@ -194,41 +128,7 @@ public class Sucursal {
         this.pedidos = pedidos;
     }
 
-    public List<MovimientoInventario> getMovimientosOrigen() {
-        return movimientosOrigen;
-    }
 
-    public void setMovimientosOrigen(List<MovimientoInventario> movimientosOrigen) {
-        this.movimientosOrigen = movimientosOrigen;
-    }
-
-    public List<MovimientoInventario> getMovimientosDestino() {
-        return movimientosDestino;
-    }
-
-    public void setMovimientosDestino(List<MovimientoInventario> movimientosDestino) {
-        this.movimientosDestino = movimientosDestino;
-    }
-
-
-    // MÉTODOS HELPER
-
-    /**
-     * Obtiene la dirección completa de la sucursal
-     */
-    public String getDireccionCompleta() {
-        return this.calle + " " + this.numero + ", " +
-                this.comuna.getNombre() + ", " +
-                this.ciudad.getNombre() + ", " +
-                this.region.getNombre();
-    }
-
-    /**
-     * Verifica si la sucursal es una bodega central
-     */
-    public boolean esBodegaCentral() {
-        return this.esBodegaCentral != null && this.esBodegaCentral;
-    }
 
 
 }

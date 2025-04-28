@@ -1,5 +1,8 @@
 package cl.Ferramas.Ferramas.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -18,12 +21,14 @@ public class Usuario {
     private Long usuarioId;
     @Column( nullable = false)
     private String email;
+    @Column( nullable = false)
+    private String apellidom ;
     @Column(nullable = false)
     private String password;
     @Column( nullable = false)
     private String nombre;
     @Column(nullable = false)
-    private String apellido;
+    private String apellidop;
     @Column(nullable = false)
     private String rut;
     private String telefono;
@@ -31,48 +36,64 @@ public class Usuario {
     private Date fechaRegistro;
     @Column( nullable = false)
     private Date ultimoLogin;
-    @Column(nullable = false)
-    private Boolean cambioPassword = false;
     private Boolean activo = true;
+    private String Direccion;
+    private Date fechaNacimiento;
 
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comuna_id")
+    private Comuna comuna;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "rol_id", nullable = false)
     private Rol rol;
 
-    @OneToMany(mappedBy = "usuario",fetch = FetchType.LAZY)
-    private List<Direccion> direcciones = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sucursal_id")
+    private Sucursal sucursal;
 
-    @OneToMany(mappedBy = "usuario",fetch = FetchType.LAZY)
-    private List<Pedido> pedidosCliente = new ArrayList<>();
+    @OneToMany(mappedBy = "cliente")
+    private List<Pedido> pedidos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "vendedor",fetch = FetchType.LAZY)
-    private List<Pedido> pedidosVendedor = new ArrayList<>();
+    @OneToMany(mappedBy = "vendedor")
 
-    @OneToMany(mappedBy = "bodeguero",fetch = FetchType.LAZY)
-    private List<Pedido> pedidosBodeguero = new ArrayList<>();
+    private List<Pedido> pedidosVendidos = new ArrayList<>();
 
-    @OneToMany(mappedBy = "contador",fetch = FetchType.LAZY)
-    private List<Pedido> pedidosContador = new ArrayList<>();
+    @OneToMany(mappedBy = "usuario")
 
+    private List<HistorialPrecio> historialPrecios = new ArrayList<>();
 
-    public Usuario(Long id, String email, String password, String nombre, String apellido, String rut, String telefono, Date fechaRegistro, Date ultimoLogin, Boolean cambioPassword, Boolean activo, Rol rol, List<Direccion> direcciones, List<Pedido> pedidosCliente, List<Pedido> pedidosVendedor, List<Pedido> pedidosBodeguero, List<Pedido> pedidosContador) {
-        this.usuarioId = id;
+    @OneToMany(mappedBy = "usuario")
+
+    private List<MovimientoInventario> movimientosInventario = new ArrayList<>();
+
+    @OneToMany(mappedBy = "usuario")
+
+    private List<HistorialEstadoPedido> historialEstadosPedido = new ArrayList<>();
+
+    public Usuario(Long usuarioId, String email, String apellidom, String password, String nombre, String apellidop, String rut, String telefono, Date fechaRegistro, Date ultimoLogin, Boolean activo, String direccion, Date fechaNacimiento, Comuna comuna, Rol rol, Sucursal sucursal, List<Pedido> pedidos, List<Pedido> pedidosVendidos, List<HistorialPrecio> historialPrecios, List<MovimientoInventario> movimientosInventario, List<HistorialEstadoPedido> historialEstadosPedido) {
+        this.usuarioId = usuarioId;
         this.email = email;
+        this.apellidom = apellidom;
         this.password = password;
         this.nombre = nombre;
-        this.apellido = apellido;
+        this.apellidop = apellidop;
         this.rut = rut;
         this.telefono = telefono;
         this.fechaRegistro = fechaRegistro;
         this.ultimoLogin = ultimoLogin;
-        this.cambioPassword = cambioPassword;
         this.activo = activo;
+        Direccion = direccion;
+        this.fechaNacimiento = fechaNacimiento;
+        this.comuna = comuna;
         this.rol = rol;
-        this.direcciones = direcciones;
-        this.pedidosCliente = pedidosCliente;
-        this.pedidosVendedor = pedidosVendedor;
-        this.pedidosBodeguero = pedidosBodeguero;
-        this.pedidosContador = pedidosContador;
+        this.sucursal = sucursal;
+        this.pedidos = pedidos;
+        this.pedidosVendidos = pedidosVendidos;
+        this.historialPrecios = historialPrecios;
+        this.movimientosInventario = movimientosInventario;
+        this.historialEstadosPedido = historialEstadosPedido;
     }
 
     public Usuario() {
@@ -94,6 +115,14 @@ public class Usuario {
         this.email = email;
     }
 
+    public String getApellidom() {
+        return apellidom;
+    }
+
+    public void setApellidom(String apellidom) {
+        this.apellidom = apellidom;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -110,12 +139,12 @@ public class Usuario {
         this.nombre = nombre;
     }
 
-    public String getApellido() {
-        return apellido;
+    public String getApellidop() {
+        return apellidop;
     }
 
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
+    public void setApellidop(String apellidop) {
+        this.apellidop = apellidop;
     }
 
     public String getRut() {
@@ -150,20 +179,36 @@ public class Usuario {
         this.ultimoLogin = ultimoLogin;
     }
 
-    public Boolean getCambioPassword() {
-        return cambioPassword;
-    }
-
-    public void setCambioPassword(Boolean cambioPassword) {
-        this.cambioPassword = cambioPassword;
-    }
-
     public Boolean getActivo() {
         return activo;
     }
 
     public void setActivo(Boolean activo) {
         this.activo = activo;
+    }
+
+    public String getDireccion() {
+        return Direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        Direccion = direccion;
+    }
+
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public Comuna getComuna() {
+        return comuna;
+    }
+
+    public void setComuna(Comuna comuna) {
+        this.comuna = comuna;
     }
 
     public Rol getRol() {
@@ -174,44 +219,52 @@ public class Usuario {
         this.rol = rol;
     }
 
-    public List<Pedido> getPedidosCliente() {
-        return pedidosCliente;
+    public Sucursal getSucursal() {
+        return sucursal;
     }
 
-    public void setPedidosCliente(List<Pedido> pedidosCliente) {
-        this.pedidosCliente = pedidosCliente;
+    public void setSucursal(Sucursal sucursal) {
+        this.sucursal = sucursal;
     }
 
-    public List<Pedido> getPedidosVendedor() {
-        return pedidosVendedor;
+    public List<Pedido> getPedidos() {
+        return pedidos;
     }
 
-    public void setPedidosVendedor(List<Pedido> pedidosVendedor) {
-        this.pedidosVendedor = pedidosVendedor;
+    public void setPedidos(List<Pedido> pedidos) {
+        this.pedidos = pedidos;
     }
 
-    public List<Pedido> getPedidosBodeguero() {
-        return pedidosBodeguero;
+    public List<Pedido> getPedidosVendidos() {
+        return pedidosVendidos;
     }
 
-    public void setPedidosBodeguero(List<Pedido> pedidosBodeguero) {
-        this.pedidosBodeguero = pedidosBodeguero;
+    public void setPedidosVendidos(List<Pedido> pedidosVendidos) {
+        this.pedidosVendidos = pedidosVendidos;
     }
 
-    public List<Pedido> getPedidosContador() {
-        return pedidosContador;
+    public List<HistorialPrecio> getHistorialPrecios() {
+        return historialPrecios;
     }
 
-    public void setPedidosContador(List<Pedido> pedidosContador) {
-        this.pedidosContador = pedidosContador;
+    public void setHistorialPrecios(List<HistorialPrecio> historialPrecios) {
+        this.historialPrecios = historialPrecios;
     }
 
-    public List<Direccion> getDirecciones() {
-        return direcciones;
+    public List<MovimientoInventario> getMovimientosInventario() {
+        return movimientosInventario;
     }
 
-    public void setDirecciones(List<Direccion> direcciones) {
-        this.direcciones = direcciones;
+    public void setMovimientosInventario(List<MovimientoInventario> movimientosInventario) {
+        this.movimientosInventario = movimientosInventario;
+    }
+
+    public List<HistorialEstadoPedido> getHistorialEstadosPedido() {
+        return historialEstadosPedido;
+    }
+
+    public void setHistorialEstadosPedido(List<HistorialEstadoPedido> historialEstadosPedido) {
+        this.historialEstadosPedido = historialEstadosPedido;
     }
 
     // MÉTODOS HELPER
@@ -220,39 +273,7 @@ public class Usuario {
      * Obtiene el nombre completo del usuario
      */
     public String getNombreCompleto() {
-        return this.nombre + " " + this.apellido;
-    }
-
-    /**
-     * Verifica si el usuario está activo
-     */
-    public boolean estaActivo() {
-        return this.activo != null && this.activo;
-    }
-
-    /**
-     * Verifica si el usuario tiene un rol específico
-     */
-    public boolean tieneRol(String nombreRol) {
-        return this.rol != null && nombreRol.equals(this.rol.getNombre());
-    }
-
-    /**
-     * Verifica si la contraseña proporcionada coincide con la almacenada
-     * (utiliza BCrypt para encripción)
-     */
-    public boolean verificarPassword(String passwordIngresada) {
-        // En una implementación real usar BCryptPasswordEncoder
-        return new BCryptPasswordEncoder().matches(passwordIngresada, this.password);
-    }
-
-    /**
-     * Cambia la contraseña del usuario
-     */
-    public void cambiarPassword(String nuevaPassword) {
-        // En una implementación real usar BCryptPasswordEncoder
-        this.password = new BCryptPasswordEncoder().encode(nuevaPassword);
-        this.cambioPassword = true;
+        return this.nombre + " " + this.apellidop + " " +  this.apellidom;
     }
 
     /**
@@ -262,22 +283,7 @@ public class Usuario {
         this.ultimoLogin = new Date();
     }
 
-    /**
-     * Obtiene la dirección principal del usuario
-     */
-    public Direccion getDireccionPrincipal() {
-        for (Direccion direccion : this.direcciones) {
-            if (direccion.getEsPrincipal()) {
-                return direccion;
-            }
-        }
-        return null;
-    }
 
-    /**
-     * Verifica si el usuario necesita cambiar su contraseña
-     */
-    public boolean requiereCambioPassword() {
-        return this.cambioPassword != null && !this.cambioPassword;
-    }
+
+
 }

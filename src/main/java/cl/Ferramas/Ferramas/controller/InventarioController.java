@@ -1,9 +1,9 @@
 package cl.Ferramas.Ferramas.controller;
 
 
-import cl.Ferramas.Ferramas.entity.HistorialEstadoPedido;
+
 import cl.Ferramas.Ferramas.entity.Inventario;
-import cl.Ferramas.Ferramas.services.HistorialEstadosPedidoService;
+
 import cl.Ferramas.Ferramas.services.InventarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

@@ -22,16 +22,16 @@ public class CategoriaService {
         return categoriaRepository.findAll();
     }
 
-    public Optional<Categoria> buscarCategoriaPorId(Long id) {
-        return categoriaRepository.findById(id);
+    public Optional<Categoria> buscarCategoriaPorId(Long categoriaId) {
+        return categoriaRepository.findById(categoriaId);
     }
 
     public Categoria guardarCategoria(Categoria categoria) {
         return categoriaRepository.save(categoria);
     }
 
-    public void BorrarCategoria(Long id) {
-        categoriaRepository.deleteById(id);
+    public void BorrarCategoria(Long categoriaId) {
+        categoriaRepository.deleteById(categoriaId);
     }
 
 }

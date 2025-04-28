@@ -1,5 +1,6 @@
 package cl.Ferramas.Ferramas.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -8,36 +9,38 @@ import java.util.List;
 
 @Entity
 @Table(name = "tipo_movimiento")
-public class TipoMovimiento {
+public class TipoMovimientoInventario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tipoMovimientoId;
-    @Column(nullable = false, unique = true)
+    private Long tipoMovimientoInventarioId;
+
+    @Column(nullable = false, length = 50)
     private String nombre;
+
     private String descripcion;
 
-    @OneToMany(mappedBy = "tipoMovimiento",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tipoMovimiento")
     private List<MovimientoInventario> movimientos = new ArrayList<>();
 
 
-    public TipoMovimiento(Long id, String nombre, String descripcion, List<MovimientoInventario> movimientos) {
-        this.tipoMovimientoId = id;
+    public TipoMovimientoInventario(Long tipoMovimientoInventarioId, String nombre, String descripcion, List<MovimientoInventario> movimientos) {
+        this.tipoMovimientoInventarioId = tipoMovimientoInventarioId;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.movimientos = movimientos;
     }
 
 
-    public TipoMovimiento() {
+    public TipoMovimientoInventario() {
     }
 
-    public Long getTipoMovimientoId() {
-        return tipoMovimientoId;
+    public Long getTipoMovimientoInventarioId() {
+        return tipoMovimientoInventarioId;
     }
 
-    public void setTipoMovimientoId(Long tipoMovimientoId) {
-        this.tipoMovimientoId = tipoMovimientoId;
+    public void setTipoMovimientoInventarioId(Long tipoMovimientoInventarioId) {
+        this.tipoMovimientoInventarioId = tipoMovimientoInventarioId;
     }
 
     public String getNombre() {

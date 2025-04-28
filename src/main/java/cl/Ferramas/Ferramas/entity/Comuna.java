@@ -1,6 +1,8 @@
 package cl.Ferramas.Ferramas.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -8,7 +10,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "comuna")
+@Table(name = "comunas")
 public class Comuna {
 
     @Id
@@ -19,23 +21,21 @@ public class Comuna {
     @Column(nullable = false)
     private String nombre;
 
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ciudad_id", nullable = false)
     private Ciudad ciudad;
 
-    @OneToMany(mappedBy = "comuna", fetch = FetchType.LAZY)
-    private List<Direccion> direcciones = new ArrayList<>();
-
-    @OneToMany(mappedBy = "comuna", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "comuna")
     private List<Sucursal> sucursales = new ArrayList<>();
 
+    @OneToMany(mappedBy = "comuna")
+    private List<Usuario> usuarios = new ArrayList<>();
 
-    public Comuna(Long id, String nombre, Ciudad ciudad, List<Direccion> direcciones, List<Sucursal> sucursales) {
+
+    public Comuna(Long id, String nombre, Ciudad ciudad, List<Sucursal> sucursales) {
         this.comunaId = id;
         this.nombre = nombre;
         this.ciudad = ciudad;
-        this.direcciones = direcciones;
         this.sucursales = sucursales;
     }
 
@@ -66,13 +66,7 @@ public class Comuna {
         this.ciudad = ciudad;
     }
 
-    public List<Direccion> getDirecciones() {
-        return direcciones;
-    }
 
-    public void setDirecciones(List<Direccion> direcciones) {
-        this.direcciones = direcciones;
-    }
 
     public List<Sucursal> getSucursales() {
         return sucursales;

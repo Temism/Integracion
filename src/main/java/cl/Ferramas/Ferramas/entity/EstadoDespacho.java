@@ -1,17 +1,18 @@
 package cl.Ferramas.Ferramas.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "estado_pago")
-public class EstadoPago {
+@Table(name = "estados_despacho")
+
+public class EstadoDespacho {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long estadoPagoId;
+    private Long estadoDespachoId;
 
     @Column(nullable = false, length = 50)
     private String nombre;
@@ -19,27 +20,25 @@ public class EstadoPago {
     private String descripcion;
 
     @OneToMany(mappedBy = "estado")
-    private List<Pago> pagos = new ArrayList<>();
+    private List<Despacho> despachos = new ArrayList<>();
 
 
-    public EstadoPago(Long estadoPagoId, String nombre, String descripcion, List<Pago> pagos) {
-        this.estadoPagoId = estadoPagoId;
+    public EstadoDespacho(Long id, String nombre, String descripcion, List<Despacho> despachos) {
+        this.estadoDespachoId = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.pagos = pagos;
+        this.despachos = despachos;
     }
 
-
-    public EstadoPago() {
+    public EstadoDespacho() {
     }
 
-
-    public Long getEstadoPagoId() {
-        return estadoPagoId;
+    public Long getEstadoDespachoId() {
+        return estadoDespachoId;
     }
 
-    public void setEstadoPagoId(Long estadoPagoId) {
-        this.estadoPagoId = estadoPagoId;
+    public void setEstadoDespachoId(Long estadoDespachoId) {
+        this.estadoDespachoId = estadoDespachoId;
     }
 
     public String getNombre() {
@@ -58,11 +57,11 @@ public class EstadoPago {
         this.descripcion = descripcion;
     }
 
-    public List<Pago> getPagos() {
-        return pagos;
+    public List<Despacho> getDespachos() {
+        return despachos;
     }
 
-    public void setPagos(List<Pago> pagos) {
-        this.pagos = pagos;
+    public void setDespachos(List<Despacho> despachos) {
+        this.despachos = despachos;
     }
 }

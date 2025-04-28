@@ -1,9 +1,7 @@
 package cl.Ferramas.Ferramas.controller;
 
 
-import cl.Ferramas.Ferramas.entity.Direccion;
 import cl.Ferramas.Ferramas.entity.EstadoPago;
-import cl.Ferramas.Ferramas.services.DireccionService;
 import cl.Ferramas.Ferramas.services.EstadoPagoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

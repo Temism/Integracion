@@ -1,6 +1,8 @@
 package cl.Ferramas.Ferramas.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -13,11 +15,14 @@ public class Rol {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rolId;
-    @Column(nullable = false)
+
+    @Column(nullable = false, length = 50)
     private String nombre;
+
     private String descripcion;
 
-    @OneToMany(mappedBy = "rol",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "rol")
+
     private List<Usuario> usuarios = new ArrayList<>();
 
 

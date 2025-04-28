@@ -1,10 +1,8 @@
 package cl.Ferramas.Ferramas.controller;
 
 
-import cl.Ferramas.Ferramas.entity.MetodoPago;
-import cl.Ferramas.Ferramas.entity.TipoMovimiento;
-import cl.Ferramas.Ferramas.services.MetodoPagoService;
-import cl.Ferramas.Ferramas.services.TipoMovimientoService;
+import cl.Ferramas.Ferramas.entity.TipoMovimientoInventario;
+import cl.Ferramas.Ferramas.services.TipoMovimientoInventarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,25 +11,25 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tipomov")
-public class TipoMovimientoController {
+public class TipoMovimientoInventarioController {
 
     @Autowired
-    private TipoMovimientoService tipoMovimientoService;
+    private TipoMovimientoInventarioService tipoMovimientoService;
 
     @GetMapping
-    public List<TipoMovimiento> getAll() {
+    public List<TipoMovimientoInventario> getAll() {
         return tipoMovimientoService.ListarMovimientos();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TipoMovimiento> getById(@PathVariable Long id) {
+    public ResponseEntity<TipoMovimientoInventario> getById(@PathVariable Long id) {
         return tipoMovimientoService.buscarPorId(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public TipoMovimiento create(@RequestBody TipoMovimiento Tipo) {
+    public TipoMovimientoInventario create(@RequestBody TipoMovimientoInventario Tipo) {
         return tipoMovimientoService.guardarTipoMov(Tipo);
     }
 

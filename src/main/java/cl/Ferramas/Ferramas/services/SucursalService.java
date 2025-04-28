@@ -1,11 +1,7 @@
 package cl.Ferramas.Ferramas.services;
 
-import cl.Ferramas.Ferramas.entity.Rol;
 import cl.Ferramas.Ferramas.entity.Sucursal;
-import cl.Ferramas.Ferramas.entity.UbicacionBodega;
 import cl.Ferramas.Ferramas.repository.SucursalRep;
-import cl.Ferramas.Ferramas.repository.UbicacionBodegaRep;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,10 +1,10 @@
 package cl.Ferramas.Ferramas.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 
-import java.util.Date;
-
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -12,60 +12,49 @@ import java.util.Date;
 public class HistorialEstadoPedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long historiaEstadoPedidolId;
 
-    private Long historialId;
-
-    private Date fechaCambio;
-
-    private String comentario;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pedido_id", nullable = false)
     private Pedido pedido;
 
-    @ManyToOne
-    @JoinColumn(name = "estado_pedido_id", nullable = false)
-    private EstadoPedido estado;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estado_anterior_id")
+    private EstadoPedido estadoAnterior;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "estado_nuevo_id", nullable = false)
+    private EstadoPedido estadoNuevo;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
+    @Column(name = "fecha_cambio", nullable = false)
+    private LocalDateTime fechaCambio = LocalDateTime.now();
 
-    public HistorialEstadoPedido(Long id, Date fechaCambio, String comentario, Pedido pedido, EstadoPedido estado, Usuario usuario) {
-        this.historialId = id;
+    private String comentario;
+
+    public HistorialEstadoPedido(Long id, Pedido pedido, EstadoPedido estadoAnterior, EstadoPedido estadoNuevo, Usuario usuario, LocalDateTime fechaCambio, String comentario) {
+        this.historiaEstadoPedidolId = id;
+        this.pedido = pedido;
+        this.estadoAnterior = estadoAnterior;
+        this.estadoNuevo = estadoNuevo;
+        this.usuario = usuario;
         this.fechaCambio = fechaCambio;
         this.comentario = comentario;
-        this.pedido = pedido;
-        this.estado = estado;
-        this.usuario = usuario;
     }
 
     public HistorialEstadoPedido() {
     }
 
-    public Long getHistorialId() {
-        return historialId;
+
+    public Long getHistoriaEstadoPedidolId() {
+        return historiaEstadoPedidolId;
     }
 
-    public void setHistorialId(Long historialId) {
-        this.historialId = historialId;
-    }
-
-    public Date getFechaCambio() {
-        return fechaCambio;
-    }
-
-    public void setFechaCambio(Date fechaCambio) {
-        this.fechaCambio = fechaCambio;
-    }
-
-    public String getComentario() {
-        return comentario;
-    }
-
-    public void setComentario(String comentario) {
-        this.comentario = comentario;
+    public void setHistoriaEstadoPedidolId(Long historiaEstadoPedidolId) {
+        this.historiaEstadoPedidolId = historiaEstadoPedidolId;
     }
 
     public Pedido getPedido() {
@@ -76,12 +65,20 @@ public class HistorialEstadoPedido {
         this.pedido = pedido;
     }
 
-    public EstadoPedido getEstado() {
-        return estado;
+    public EstadoPedido getEstadoAnterior() {
+        return estadoAnterior;
     }
 
-    public void setEstado(EstadoPedido estado) {
-        this.estado = estado;
+    public void setEstadoAnterior(EstadoPedido estadoAnterior) {
+        this.estadoAnterior = estadoAnterior;
+    }
+
+    public EstadoPedido getEstadoNuevo() {
+        return estadoNuevo;
+    }
+
+    public void setEstadoNuevo(EstadoPedido estadoNuevo) {
+        this.estadoNuevo = estadoNuevo;
     }
 
     public Usuario getUsuario() {
@@ -90,5 +87,21 @@ public class HistorialEstadoPedido {
 
     public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
+    }
+
+    public LocalDateTime getFechaCambio() {
+        return fechaCambio;
+    }
+
+    public void setFechaCambio(LocalDateTime fechaCambio) {
+        this.fechaCambio = fechaCambio;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
     }
 }

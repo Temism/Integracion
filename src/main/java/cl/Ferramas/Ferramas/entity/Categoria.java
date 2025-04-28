@@ -1,9 +1,12 @@
 package cl.Ferramas.Ferramas.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -11,20 +14,18 @@ import java.util.Set;
 @Table(name = "categoria")
 public class Categoria {
     @Id
-
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long categoriaId;
-    @Column(nullable = false)
+
+    @Column(nullable = false, length = 50)
     private String nombre;
-    @Column(nullable = false)
+
     private String descripcion;
 
+    @OneToMany(mappedBy = "categoria")
+    private List<Producto> productos = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "categorias", fetch = FetchType.LAZY)
-    private Set<Producto> productos = new HashSet<>();
-
-    public Categoria(Long categoriaId, String nombre, String descripcion, Set<Producto> productos) {
+    public Categoria(Long categoriaId, String nombre, String descripcion, List<Producto> productos) {
         this.categoriaId = categoriaId;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -34,12 +35,12 @@ public class Categoria {
     public Categoria() {
     }
 
-    public Long getId() {
+    public Long getCategoriaId() {
         return categoriaId;
     }
 
-    public void setId(Long id) {
-        this.categoriaId = id;
+    public void setCategoriaId(Long categoriaId) {
+        this.categoriaId = categoriaId;
     }
 
     public String getNombre() {
@@ -58,11 +59,11 @@ public class Categoria {
         this.descripcion = descripcion;
     }
 
-    public Set<Producto> getProductos() {
+    public List<Producto> getProductos() {
         return productos;
     }
 
-    public void setProductos(Set<Producto> productos) {
+    public void setProductos(List<Producto> productos) {
         this.productos = productos;
     }
 }

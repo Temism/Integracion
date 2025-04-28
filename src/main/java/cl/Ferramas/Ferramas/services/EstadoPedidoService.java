@@ -1,9 +1,7 @@
 package cl.Ferramas.Ferramas.services;
 
-import cl.Ferramas.Ferramas.entity.Direccion;
 import cl.Ferramas.Ferramas.entity.EstadoPedido;
 
-import cl.Ferramas.Ferramas.exception.ExceptionClasses;
 import cl.Ferramas.Ferramas.repository.EstadoPedidoRep;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

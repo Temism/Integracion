@@ -1,5 +1,6 @@
 package cl.Ferramas.Ferramas.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -12,13 +13,14 @@ public class TipoEntrega {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long tipoEntregaId;
-    @Column( nullable = false, unique = true)
+
+    @Column(nullable = false, length = 50)
     private String nombre;
+
     private String descripcion;
 
-    @OneToMany(mappedBy = "tipoEntrega",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tipoEntrega")
     private List<Pedido> pedidos = new ArrayList<>();
 
 
@@ -28,7 +30,6 @@ public class TipoEntrega {
         this.descripcion = descripcion;
         this.pedidos = pedidos;
     }
-
 
     public TipoEntrega() {
     }

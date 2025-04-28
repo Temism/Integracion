@@ -1,10 +1,8 @@
 package cl.Ferramas.Ferramas.services;
 
-import cl.Ferramas.Ferramas.entity.Comuna;
-import cl.Ferramas.Ferramas.entity.TipoMovimiento;
-import cl.Ferramas.Ferramas.exception.ExceptionClasses;
+import cl.Ferramas.Ferramas.entity.TipoMovimientoInventario;
 import cl.Ferramas.Ferramas.repository.ComunRep;
-import cl.Ferramas.Ferramas.repository.TipoMovimientoRep;
+import cl.Ferramas.Ferramas.repository.TipoMovimientoInventarioRep;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,23 +10,23 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TipoMovimientoService {
+public class TipoMovimientoInventarioService {
 
     @Autowired
-    private TipoMovimientoRep tipomov;
+    private TipoMovimientoInventarioRep tipomov;
 
     @Autowired
     private ComunRep comunRep;
 
-    public List<TipoMovimiento> ListarMovimientos(){
+    public List<TipoMovimientoInventario> ListarMovimientos(){
         return tipomov.findAll();
     }
 
-    public Optional<TipoMovimiento> buscarPorId(Long tipoMovimientoId){
+    public Optional<TipoMovimientoInventario> buscarPorId(Long tipoMovimientoId){
         return tipomov.findById(tipoMovimientoId);
     }
 
-    public TipoMovimiento guardarTipoMov(TipoMovimiento tmov) {
+    public TipoMovimientoInventario guardarTipoMov(TipoMovimientoInventario tmov) {
         return tipomov.save(tmov);
     }
 

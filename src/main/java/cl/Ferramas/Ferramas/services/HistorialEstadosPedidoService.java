@@ -1,7 +1,6 @@
 package cl.Ferramas.Ferramas.services;
 
 
-import cl.Ferramas.Ferramas.entity.Direccion;
 import cl.Ferramas.Ferramas.entity.HistorialEstadoPedido;
 import cl.Ferramas.Ferramas.repository.HistorialEstadoPedidoRep;
 import jakarta.transaction.Transactional;
@@ -24,16 +23,16 @@ public class HistorialEstadosPedidoService {
         return historialEstadoPedidoRep.findAll();
     }
 
-    public Optional<HistorialEstadoPedido> buscarPorId(Long historialId){
-        return historialEstadoPedidoRep.findById(historialId);
+    public Optional<HistorialEstadoPedido> buscarPorId(Long historiaEstadoPedidolId){
+        return historialEstadoPedidoRep.findById(historiaEstadoPedidolId);
     }
 
     public HistorialEstadoPedido guardarHistorial(HistorialEstadoPedido historialEstadoPedido) {
         return historialEstadoPedidoRep.save(historialEstadoPedido);
     }
 
-    public void ELiminarHistorial(Long historialId) {
-        historialEstadoPedidoRep.deleteById(historialId);
+    public void ELiminarHistorial(Long historiaEstadoPedidolId) {
+        historialEstadoPedidoRep.deleteById(historiaEstadoPedidolId);
     }
 
 
