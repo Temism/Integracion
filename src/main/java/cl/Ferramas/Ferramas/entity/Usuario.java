@@ -1,14 +1,10 @@
 package cl.Ferramas.Ferramas.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -33,15 +29,14 @@ public class Usuario {
     private String rut;
     private String telefono;
     @Column(nullable = false)
-    private Date fechaRegistro;
-    @Column( nullable = false)
-    private Date ultimoLogin;
+    private LocalDate fechaRegistro;
+    private LocalDate ultimoLogin;
     private Boolean activo = true;
     private String Direccion;
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     @JoinColumn(name = "comuna_id")
     private Comuna comuna;
 
@@ -72,7 +67,8 @@ public class Usuario {
 
     private List<HistorialEstadoPedido> historialEstadosPedido = new ArrayList<>();
 
-    public Usuario(Long usuarioId, String email, String apellidom, String password, String nombre, String apellidop, String rut, String telefono, Date fechaRegistro, Date ultimoLogin, Boolean activo, String direccion, Date fechaNacimiento, Comuna comuna, Rol rol, Sucursal sucursal, List<Pedido> pedidos, List<Pedido> pedidosVendidos, List<HistorialPrecio> historialPrecios, List<MovimientoInventario> movimientosInventario, List<HistorialEstadoPedido> historialEstadosPedido) {
+
+    public Usuario(Long usuarioId, String email, String apellidom, String password, String nombre, String apellidop, String rut, String telefono, LocalDate fechaRegistro, LocalDate ultimoLogin, Boolean activo, String direccion, LocalDate fechaNacimiento, Comuna comuna, Rol rol, Sucursal sucursal, List<Pedido> pedidos, List<Pedido> pedidosVendidos, List<HistorialPrecio> historialPrecios, List<MovimientoInventario> movimientosInventario, List<HistorialEstadoPedido> historialEstadosPedido) {
         this.usuarioId = usuarioId;
         this.email = email;
         this.apellidom = apellidom;
@@ -84,7 +80,7 @@ public class Usuario {
         this.fechaRegistro = fechaRegistro;
         this.ultimoLogin = ultimoLogin;
         this.activo = activo;
-        Direccion = direccion;
+        this.Direccion = direccion;
         this.fechaNacimiento = fechaNacimiento;
         this.comuna = comuna;
         this.rol = rol;
@@ -163,19 +159,19 @@ public class Usuario {
         this.telefono = telefono;
     }
 
-    public Date getFechaRegistro() {
+    public LocalDate getFechaRegistro() {
         return fechaRegistro;
     }
 
-    public void setFechaRegistro(Date fechaRegistro) {
+    public void setFechaRegistro(LocalDate fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public Date getUltimoLogin() {
+    public LocalDate getUltimoLogin() {
         return ultimoLogin;
     }
 
-    public void setUltimoLogin(Date ultimoLogin) {
+    public void setUltimoLogin(LocalDate ultimoLogin) {
         this.ultimoLogin = ultimoLogin;
     }
 
@@ -195,11 +191,11 @@ public class Usuario {
         Direccion = direccion;
     }
 
-    public Date getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
@@ -266,24 +262,4 @@ public class Usuario {
     public void setHistorialEstadosPedido(List<HistorialEstadoPedido> historialEstadosPedido) {
         this.historialEstadosPedido = historialEstadosPedido;
     }
-
-    // MÉTODOS HELPER
-
-    /**
-     * Obtiene el nombre completo del usuario
-     */
-    public String getNombreCompleto() {
-        return this.nombre + " " + this.apellidop + " " +  this.apellidom;
-    }
-
-    /**
-     * Actualiza la fecha del último login
-     */
-    public void registrarLogin() {
-        this.ultimoLogin = new Date();
-    }
-
-
-
-
 }

@@ -2,10 +2,13 @@ package cl.Ferramas.Ferramas.controller;
 
 
 
-import cl.Ferramas.Ferramas.entity.Usuario;
 
+import cl.Ferramas.Ferramas.dto.RegistroUsuarioDTO;
+import cl.Ferramas.Ferramas.dto.UsuarioDTO;
 import cl.Ferramas.Ferramas.services.UsuarioService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,34 +19,22 @@ import java.util.List;
 public class UsuarioController {
 
     @Autowired
-    private UsuarioService usuarioService;
+    private UsuarioService clienteService;
 
-    @GetMapping
-    public List<Usuario> getAll() {
-        return usuarioService.ListarUsuarios();
+    @PostMapping("/registrouser")
+    public ResponseEntity<RegistroUsuarioDTO> registrarCliente(@Valid @RequestBody RegistroUsuarioDTO registroDTO) {
+        RegistroUsuarioDTO usuarioregistrado = clienteService.registrarUsuario(registroDTO);
+        return new ResponseEntity<>(usuarioregistrado, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Usuario> getById(@PathVariable Long id) {
-        return usuarioService.BuscarUsuarioPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
 
-    @PostMapping
-    public Usuario create(@RequestBody Usuario usuario) {
-        return usuarioService.guardarUsuario(usuario);
+    @GetMapping("/ListaUsuarios")
+    public List<UsuarioDTO> getAll() {
+        return clienteService.listarUsuarios();
     }
 
 
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (usuarioService.BuscarUsuarioPorId(id).isPresent()) {
-            usuarioService.EliminarUusuario(id);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+
+
 }
