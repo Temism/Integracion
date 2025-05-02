@@ -134,9 +134,10 @@ public class ClienteMapper {
         usuarioDTO.setFechaRegistro(usuario.getFechaRegistro());
         usuarioDTO.setRut(usuario.getRut());
         usuarioDTO.setUltimoLogin(usuario.getUltimoLogin());
-        usuarioDTO.setComuna(usuario.getComuna().getNombre());
-        usuarioDTO.setSucursal(usuario.getSucursal().getNombre());
-        usuarioDTO.setRol(usuario.getRol().getNombre());
+
+        usuarioDTO.setComuna(usuario.getComuna() != null ? usuario.getComuna().getNombre() : null);
+        usuarioDTO.setSucursal(usuario.getSucursal() != null ? usuario.getSucursal().getNombre() : null);
+        usuarioDTO.setRol(usuario.getRol() != null ? usuario.getRol().getNombre() : null);
 
         return usuarioDTO;
     }

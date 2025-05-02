@@ -1,3 +1,69 @@
+-- DESACTIVAR LAS RESTRICCIONES DE CLAVE FORÁNEA PARA REALIZAR LA CARGA DE DATOS
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- LIMPIAR TABLAS ANTES DE INSERTAR DATOS
+
+TRUNCATE TABLE historial_estado_pedido;
+TRUNCATE TABLE historial_precios;
+TRUNCATE TABLE pago;
+TRUNCATE TABLE despachos;
+TRUNCATE TABLE detalle_pedido;
+TRUNCATE TABLE pedido;
+TRUNCATE TABLE movimiento_inventario;
+TRUNCATE TABLE inventario;
+TRUNCATE TABLE producto;
+TRUNCATE TABLE usuario;
+TRUNCATE TABLE sucursal;
+TRUNCATE TABLE marca;
+TRUNCATE TABLE categoria;
+TRUNCATE TABLE comunas;
+TRUNCATE TABLE ciudades;
+TRUNCATE TABLE regiones;
+TRUNCATE TABLE tipo_movimiento;
+TRUNCATE TABLE tipo_entrega;
+TRUNCATE TABLE metodo_pago;
+TRUNCATE TABLE estado_pago;
+TRUNCATE TABLE estados_despacho;
+TRUNCATE TABLE estado_pedido;
+TRUNCATE TABLE rol;
+
+-- REGIONES, CIUDADES Y COMUNAS
+
+-- Tabla regiones
+INSERT INTO regiones (nombre, codigo, ordinal) VALUES 
+('Región de Arica y Parinacota', 'XV', 1),
+('Región de Tarapacá', 'I', 2),
+('Región de Antofagasta', 'II', 3),
+('Región de Atacama', 'III', 4),
+('Región de Coquimbo', 'IV', 5),
+('Región de Valparaíso', 'V', 6),
+('Región Metropolitana de Santiago', 'RM', 7),
+('Región del Libertador General Bernardo O''Higgins', 'VI', 8);
+
+-- Tabla ciudades
+INSERT INTO ciudades (nombre, region_id) VALUES 
+('Santiago', 7),
+('Viña del Mar', 6),
+('Valparaíso', 6),
+('Rancagua', 8),
+('Arica', 1),
+('Iquique', 2),
+('Antofagasta', 3),
+('La Serena', 5);
+
+-- Tabla comunas
+INSERT INTO comunas (nombre, ciudad_id) VALUES 
+('Santiago', 1),
+('Providencia', 1),
+('Las Condes', 1),
+('Viña del Mar', 2),
+('Concón', 2),
+('Valparaíso', 3),
+('Rancagua', 4),
+('Machalí', 4),
+('Arica', 5),
+('Iquique', 6);
 
 -- Tabla rol
 INSERT INTO rol (nombre, descripcion) VALUES 
@@ -56,43 +122,6 @@ INSERT INTO tipo_movimiento (nombre, descripcion) VALUES
 ('Ajuste positivo', 'Ajuste positivo de inventario'),
 ('Ajuste negativo', 'Ajuste negativo de inventario'),
 ('Traslado', 'Traslado entre sucursales Ferramas');
-
--- REGIONES, CIUDADES Y COMUNAS
-
--- Tabla regiones
-INSERT INTO regiones (nombre, codigo, ordinal) VALUES 
-('Región de Arica y Parinacota', 'XV', 1),
-('Región de Tarapacá', 'I', 2),
-('Región de Antofagasta', 'II', 3),
-('Región de Atacama', 'III', 4),
-('Región de Coquimbo', 'IV', 5),
-('Región de Valparaíso', 'V', 6),
-('Región Metropolitana de Santiago', 'RM', 7),
-('Región del Libertador General Bernardo O''Higgins', 'VI', 8);
-
--- Tabla ciudades
-INSERT INTO ciudades (nombre, region_id) VALUES 
-('Santiago', 7),
-('Viña del Mar', 6),
-('Valparaíso', 6),
-('Rancagua', 8),
-('Arica', 1),
-('Iquique', 2),
-('Antofagasta', 3),
-('La Serena', 5);
-
--- Tabla comunas
-INSERT INTO comunas (nombre, ciudad_id) VALUES 
-('Santiago', 1),
-('Providencia', 1),
-('Las Condes', 1),
-('Viña del Mar', 2),
-('Concón', 2),
-('Valparaíso', 3),
-('Rancagua', 4),
-('Machalí', 4),
-('Arica', 5),
-('Iquique', 6);
 
 -- CATEGORÍA Y MARCA
 
@@ -265,6 +294,10 @@ INSERT INTO historial_estado_pedido (fecha_cambio, comentario, estado_anterior_i
 ('2025-03-01 14:00:00', 'Creación del pedido', NULL, 1, 3, 7),
 ('2025-03-01 14:15:00', 'Pago recibido', 1, 2, 3, 7),
 ('2025-03-01 14:45:00', 'En preparación', 2, 3, 3, 4);
+
+-- VOLVER A ACTIVAR LAS RESTRICCIONES DE CLAVE FORÁNEA
+
+SET FOREIGN_KEY_CHECKS = 1;
 
 
 
