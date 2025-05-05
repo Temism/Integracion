@@ -18,10 +18,12 @@ public class UsuarioDTO {
     private String rol;
     private String Sucursal;
     private LocalDate ultimoLogin;
+    private Boolean activo;
 
-    public UsuarioDTO(Long id, String nombre, String apellidop, String apellidom, String email, String direccion, String telefono, LocalDate fechaNacimiento, LocalDate fechaRegistro, String rut, String comuna, String rol, String sucursal, LocalDate ultimoLogin) {
-        Id = id;
+    public UsuarioDTO(Long id, String nombre, String apellidop,Boolean activo, String apellidom, String email, String direccion, String telefono, LocalDate fechaNacimiento, LocalDate fechaRegistro, String rut, String comuna, String rol, String sucursal, LocalDate ultimoLogin) {
+        this.Id = id;
         this.nombre = nombre;
+        this.activo = activo;
         this.apellidop = apellidop;
         this.apellidom = apellidom;
         this.email = email;
@@ -32,13 +34,21 @@ public class UsuarioDTO {
         this.rut = rut;
         this.comuna = comuna;
         this.rol = rol;
-        Sucursal = sucursal;
+        this.Sucursal = sucursal;
         this.ultimoLogin = ultimoLogin;
     }
 
     public UsuarioDTO() {
     }
 
+
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
 
     public Long getId() {
         return Id;

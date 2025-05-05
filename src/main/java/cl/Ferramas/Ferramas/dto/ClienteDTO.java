@@ -1,27 +1,32 @@
 package cl.Ferramas.Ferramas.dto;
 
-import cl.Ferramas.Ferramas.entity.Comuna;
+
 
 import java.time.LocalDate;
 
 public class ClienteDTO {
 
-
+    private Long Id;
+    private String rut;
     private String nombre;
     private String apellidop;
     private String apellidom;
     private String email;
+    private String password;
     private String direccion;
     private String telefono;
     private LocalDate fechaNacimiento;
     private LocalDate fechaRegistro;
-    private String rut;
-    private Long comuna;
+    private String comuna;
     private Long rol;
+    private Boolean activo;
 
 
-    public ClienteDTO(String nombre, String apellidop, String apellidom, String email, String direccion, String telefono, LocalDate fechaNacimiento, LocalDate fechaRegistro, String rut, Long comuna, Long rol) {
+    public ClienteDTO(Long Id,String nombre,String password,Boolean activo, String apellidop, String apellidom, String email, String direccion, String telefono, LocalDate fechaNacimiento, LocalDate fechaRegistro, String rut, String comuna, Long rol) {
+        this.Id = Id;
         this.nombre = nombre;
+        this.password = password;
+        this.activo = activo;
         this.apellidop = apellidop;
         this.apellidom = apellidom;
         this.email = email;
@@ -34,6 +39,29 @@ public class ClienteDTO {
         this.rol = rol;
     }
 
+    public Boolean getActivo() {
+        return activo;
+    }
+
+    public void setActivo(Boolean activo) {
+        this.activo = activo;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
+    }
 
     public Long getRol() {
         return rol;
@@ -119,11 +147,11 @@ public class ClienteDTO {
         this.rut = rut;
     }
 
-    public Long getComuna() {
+    public String getComuna() {
         return comuna;
     }
 
-    public void setComuna(Long comuna) {
+    public void setComuna(String comuna) {
         this.comuna = comuna;
     }
 }

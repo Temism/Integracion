@@ -1,5 +1,6 @@
 package cl.Ferramas.Ferramas.controller;
 
+import cl.Ferramas.Ferramas.dto.CambioPasswordDTO;
 import cl.Ferramas.Ferramas.dto.ClienteDTO;
 import cl.Ferramas.Ferramas.dto.RegistroClienteDTO;
 import cl.Ferramas.Ferramas.dto.UsuarioDTO;
@@ -32,6 +33,20 @@ public class ClienteController {
     @GetMapping("/listaclientes")
     public List<ClienteDTO> getAll() {
         return clienteService.listarClientes();
+    }
+
+    @PatchMapping("/cambiopassword/{id}")
+    public ResponseEntity<String> cambioPassword(@PathVariable Long id, @RequestBody CambioPasswordDTO cambiopassword){
+
+        Boolean cambio= clienteService.cambiarPassword(id,cambiopassword.getPasswordActual(),cambiopassword.getPasswordNueva());
+
+        if (cambio) {
+            return ResponseEntity.ok("Contraseña actualizada correctamente.");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("La contraseña actual no es válida o el usuario no existe.");
+        }
+
     }
 
 

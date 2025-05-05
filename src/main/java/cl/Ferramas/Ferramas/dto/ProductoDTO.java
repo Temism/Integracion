@@ -1,81 +1,52 @@
-package cl.Ferramas.Ferramas.entity;
+package cl.Ferramas.Ferramas.dto;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
 
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.*;
 
+public class ProductoDTO {
 
-@Entity
-@Table(name = "producto")
-public class Producto {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productoId;
-    @Column( nullable = false, unique = true)
+    private Long id;
     private String codigo;
-    @Column( nullable = false, unique = true)
     private String nombre;
-    @Column( nullable = false)
     private String descripcion;
-    private String imagenUrl;
-    @Column(name = "precio_actual", nullable = false)
+    private String marca;
+    private String categoria;
     private BigDecimal precioActual;
-
-    @Column(nullable = false)
     private BigDecimal costo;
-    @Column(name = "garantia_meses")
     private Integer garantiaMeses;
-    private Boolean activo = true;
-
-    @Column(name = "fecha_creacion")
-    private LocalDate fechaCreacion = LocalDate.now();
-
-    @Column(name = "fecha_actualizacion")
-    private LocalDate fechaActualizacion = LocalDate.now();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "marca_id", nullable = false)
-
-    private Marca marca;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoria_id", nullable = false)
-    private Categoria categoria;
+    private Boolean activo;
+    private LocalDate fechaCreacion;
+    private LocalDate fechaActualizacion;
 
 
-    public Producto(Long productoId, String codigo, String nombre, String descripcion, String imagenUrl, BigDecimal precioActual, BigDecimal costo, Integer garantiaMeses, Boolean activo, LocalDate fechaCreacion, LocalDate fechaActualizacion, Marca marca, Categoria categoria) {
-        this.productoId = productoId;
+    public ProductoDTO(Long id,String codigo, String nombre, String descripcion, String marca, String categoria, BigDecimal precioActual, BigDecimal costo, Integer garantiaMeses, Boolean activo, LocalDate fechaCreacion, LocalDate fechaActualizacion) {
+        this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
-        this.imagenUrl = imagenUrl;
+        this.marca = marca;
+        this.categoria = categoria;
         this.precioActual = precioActual;
         this.costo = costo;
         this.garantiaMeses = garantiaMeses;
         this.activo = activo;
         this.fechaCreacion = fechaCreacion;
         this.fechaActualizacion = fechaActualizacion;
-        this.marca = marca;
-        this.categoria = categoria;
     }
 
-
-    public Producto() {
+    public Long getId() {
+        return id;
     }
 
-    public Long getProductoId() {
-        return productoId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setProductoId(Long productoId) {
-        this.productoId = productoId;
+    public ProductoDTO() {
     }
+
 
     public String getCodigo() {
         return codigo;
@@ -101,12 +72,20 @@ public class Producto {
         this.descripcion = descripcion;
     }
 
-    public String getImagenUrl() {
-        return imagenUrl;
+    public String getMarca() {
+        return marca;
     }
 
-    public void setImagenUrl(String imagenUrl) {
-        this.imagenUrl = imagenUrl;
+    public void setMarca(String marca) {
+        this.marca = marca;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
     }
 
     public BigDecimal getPrecioActual() {
@@ -156,22 +135,4 @@ public class Producto {
     public void setFechaActualizacion(LocalDate fechaActualizacion) {
         this.fechaActualizacion = fechaActualizacion;
     }
-
-    public Marca getMarca() {
-        return marca;
-    }
-
-    public void setMarca(Marca marca) {
-        this.marca = marca;
-    }
-
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
 }
-
-

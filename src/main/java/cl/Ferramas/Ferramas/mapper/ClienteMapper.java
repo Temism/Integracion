@@ -47,6 +47,8 @@ public class ClienteMapper {
         responseDTO.setDireccion(usuario.getDireccion());
         responseDTO.setTelefono(usuario.getTelefono());
         responseDTO.setFechaRegistro(usuario.getFechaRegistro());
+        responseDTO.setComuna(usuario.getComuna().getId());
+
 
 
         return responseDTO;
@@ -90,6 +92,7 @@ public class ClienteMapper {
         responseDTO.setFechaRegistro(usuario.getFechaRegistro());
 
 
+
         return responseDTO;
     }
 
@@ -110,7 +113,9 @@ public class ClienteMapper {
         clienteDTO.setFechaNacimiento(usuario.getFechaNacimiento());
         clienteDTO.setFechaRegistro(usuario.getFechaRegistro());
         clienteDTO.setRut(usuario.getRut());
-
+        clienteDTO.setComuna(usuario.getComuna().getNombre());
+        clienteDTO.setId(usuario.getUsuarioId());
+        clienteDTO.setActivo(usuario.getActivo());
 
         return clienteDTO;
     }
@@ -134,6 +139,7 @@ public class ClienteMapper {
         usuarioDTO.setFechaRegistro(usuario.getFechaRegistro());
         usuarioDTO.setRut(usuario.getRut());
         usuarioDTO.setUltimoLogin(usuario.getUltimoLogin());
+        usuarioDTO.setActivo(usuario.getActivo());
 
         usuarioDTO.setComuna(usuario.getComuna() != null ? usuario.getComuna().getNombre() : null);
         usuarioDTO.setSucursal(usuario.getSucursal() != null ? usuario.getSucursal().getNombre() : null);

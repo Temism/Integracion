@@ -1,33 +1,3 @@
--- DESACTIVAR LAS RESTRICCIONES DE CLAVE FORÁNEA PARA REALIZAR LA CARGA DE DATOS
-
-SET FOREIGN_KEY_CHECKS = 0;
-
--- LIMPIAR TABLAS ANTES DE INSERTAR DATOS
-
-TRUNCATE TABLE historial_estado_pedido;
-TRUNCATE TABLE historial_precios;
-TRUNCATE TABLE pago;
-TRUNCATE TABLE despachos;
-TRUNCATE TABLE detalle_pedido;
-TRUNCATE TABLE pedido;
-TRUNCATE TABLE movimiento_inventario;
-TRUNCATE TABLE inventario;
-TRUNCATE TABLE producto;
-TRUNCATE TABLE usuario;
-TRUNCATE TABLE sucursal;
-TRUNCATE TABLE marca;
-TRUNCATE TABLE categoria;
-TRUNCATE TABLE comunas;
-TRUNCATE TABLE ciudades;
-TRUNCATE TABLE regiones;
-TRUNCATE TABLE tipo_movimiento;
-TRUNCATE TABLE tipo_entrega;
-TRUNCATE TABLE metodo_pago;
-TRUNCATE TABLE estado_pago;
-TRUNCATE TABLE estados_despacho;
-TRUNCATE TABLE estado_pedido;
-TRUNCATE TABLE rol;
-
 -- REGIONES, CIUDADES Y COMUNAS
 
 -- Tabla regiones
@@ -151,26 +121,26 @@ INSERT INTO marca (nombre, descripcion) VALUES
 
 -- Insertar sucursales
 INSERT INTO sucursal (nombre, direccion, comuna_id, telefono_sucursal) VALUES
-('Ferramas Centro', 'Av. Libertador Bernardo O''Higgins 123', 1, '+56228888888'),
-('Ferramas Providencia', 'Av. Providencia 2154', 2, '+56229999999'),
-('Ferramas Valparaíso', 'Av. Argentina 456', 6, '+56322222222'),
-('Ferramas Rancagua', 'Av. Millán 1234', 7, '+56722333444'),
-('Ferramas Las Condes', 'Av. Apoquindo 7890', 3, '+56225556666'),
-('Ferramas Viña del Mar', 'Av. San Martín 1500', 4, '+56322111222'),
-('Ferramas Arica', 'Av. Santa María 800', 9, '+56582345678'),
-('Ferramas Iquique', 'Av. Héroes de la Concepción 100', 10, '+56572345678');
+('Ferramas Centro', 'Av. Libertador Bernardo O''Higgins 123', 1, '228888888'),
+('Ferramas Providencia', 'Av. Providencia 2154', 2, '229999999'),
+('Ferramas Valparaíso', 'Av. Argentina 456', 6, '322222222'),
+('Ferramas Rancagua', 'Av. Millán 1234', 7, '722333444'),
+('Ferramas Las Condes', 'Av. Apoquindo 7890', 3, '225556666'),
+('Ferramas Viña del Mar', 'Av. San Martín 1500', 4, '322111222'),
+('Ferramas Arica', 'Av. Santa María 800', 9, '582345678'),
+('Ferramas Iquique', 'Av. Héroes de la Concepción 100', 10, '572345678');
 
 -- USUARIOS
 
-INSERT INTO usuario (nombre, apellidop, apellidom, email, telefono, direccion, fecha_nacimiento, fecha_registro, activo, rol_id, sucursal_id, ultimo_login, rut, password) VALUES 
-('Juan', 'Pérez', 'González', 'juan.perez@ferramas.cl', '+56987654321', 'Los Alerces 123', '1985-05-15', '2023-01-10', TRUE, 1, 1, '2025-04-25', '12345678-9', '$2a$10$xVrY6SjNS37HK3vxkJLVL.2yJv9NscEy6h5eIYx3NJ9YyKHN8y1M.'),
-('María', 'López', 'Soto', 'maria.lopez@gmail.com', '+56912345678', 'Las Acacias 456', '1990-10-22', '2023-02-15', TRUE, 2, NULL, '2025-04-26', '98765432-1', '$2a$10$xVrY6SjNS37HK3vxkJLVL.2yJv9NscEy6h5eIYx3NJ9YyKHN8y1M.'),
-('Carlos', 'Rodríguez', 'Muñoz', 'carlos.rodriguez@ferramas.cl', '+56923456789', 'Los Olmos 789', '1988-07-30', '2023-03-05', TRUE, 3, 2, '2025-04-27', '11222333-4', '$2a$10$xVrY6SjNS37HK3vxkJLVL.2yJv9NscEy6h5eIYx3NJ9YyKHN8y1M.'),
-('Ana', 'Martínez', 'Silva', 'ana.martinez@ferramas.cl', '+56934567890', 'Los Pinos 101', '1992-12-08', '2023-04-20', TRUE, 4, 3, '2025-04-27', '22333444-5', '$2a$10$xVrY6SjNS37HK3vxkJLVL.2yJv9NscEy6h5eIYx3NJ9YyKHN8y1M.'),
-('Pedro', 'Gómez', 'Rojas', 'pedro.gomez@ferramas.cl', '+56945678901', 'Los Cipreses 202', '1980-03-25', '2023-05-12', TRUE, 5, 1, '2025-04-26', '33444555-6', '$2a$10$xVrY6SjNS37HK3vxkJLVL.2yJv9NscEy6h5eIYx3NJ9YyKHN8y1M.'),
-('Laura', 'Fernández', 'Torres', 'laura.fernandez@gmail.com', '+56956789012', 'Las Palmeras 303', '1995-08-18', '2023-06-30', TRUE, 2, NULL, '2025-04-25', '44555666-7', '$2a$10$xVrY6SjNS37HK3vxkJLVL.2yJv9NscEy6h5eIYx3NJ9YyKHN8y1M.'),
-('Roberto', 'Díaz', 'Fuentes', 'roberto.diaz@ferramas.cl', '+56967890123', 'Las Encinas 404', '1982-09-10', '2023-07-05', TRUE, 3, 4, '2025-04-28', '55666777-8', '$2a$10$xVrY6SjNS37HK3vxkJLVL.2yJv9NscEy6h5eIYx3NJ9YyKHN8y1M.'),
-('Carmen', 'Sánchez', 'Vera', 'carmen.sanchez@ferramas.cl', '+56978901234', 'Los Aromos 505', '1993-11-20', '2023-08-15', TRUE, 4, 5, '2025-04-29', '66777888-9', '$2a$10$xVrY6SjNS37HK3vxkJLVL.2yJv9NscEy6h5eIYx3NJ9YyKHN8y1M.');
+INSERT INTO usuario (nombre, apellidop, apellidom, email, telefono, direccion, fecha_nacimiento, fecha_registro, activo, rol_id, sucursal_id, ultimo_login, rut, password,comuna_id) VALUES
+('Juan', 'Pérez', 'González', 'juan.perez@ferramas.cl', '987654321', 'Los Alerces 123', '1985-05-15', '2023-01-10', TRUE, 1, 1, '2025-04-25', '12345678-9', '$2a$10$OyoWlKfchC/vzbGCMXfN9ObGilU09/jKZ7o6gjSUFKEgHu7fKnksW',1),
+('María', 'López', 'Soto', 'maria.lopez@gmail.com', '912345678', 'Las Acacias 456', '1990-10-22', '2023-02-15', TRUE, 2, NULL, '2025-04-26', '98765432-1', '$2a$10$OyoWlKfchC/vzbGCMXfN9ObGilU09/jKZ7o6gjSUFKEgHu7fKnksW',2),
+('Carlos', 'Rodríguez', 'Muñoz', 'carlos.rodriguez@ferramas.cl', '923456789', 'Los Olmos 789', '1988-07-30', '2023-03-05', TRUE, 3, 2, '2025-04-27', '11222333-4', '$2a$10$OyoWlKfchC/vzbGCMXfN9ObGilU09/jKZ7o6gjSUFKEgHu7fKnksW',1),
+('Ana', 'Martínez', 'Silva', 'ana.martinez@ferramas.cl', '934567890', 'Los Pinos 101', '1992-12-08', '2023-04-20', TRUE, 4, 3, '2025-04-27', '22333444-5', '$2a$10$OyoWlKfchC/vzbGCMXfN9ObGilU09/jKZ7o6gjSUFKEgHu7fKnksW',3),
+('Pedro', 'Gómez', 'Rojas', 'pedro.gomez@ferramas.cl', '945678901', 'Los Cipreses 202', '1980-03-25', '2023-05-12', TRUE, 5, 1, '2025-04-26', '33444555-6', '$2a$10$OyoWlKfchC/vzbGCMXfN9ObGilU09/jKZ7o6gjSUFKEgHu7fKnksW',3),
+('Laura', 'Fernández', 'Torres', 'laura.fernandez@gmail.com', '956789012', 'Las Palmeras 303', '1995-08-18', '2023-06-30', TRUE, 2, NULL, '2025-04-25', '44555666-7', '$2a$10$OyoWlKfchC/vzbGCMXfN9ObGilU09/jKZ7o6gjSUFKEgHu7fKnksW',4),
+('Roberto', 'Díaz', 'Fuentes', 'roberto.diaz@ferramas.cl', '967890123', 'Las Encinas 404', '1982-09-10', '2023-07-05', TRUE, 3, 4, '2025-04-28', '55666777-8', '$2a$10$OyoWlKfchC/vzbGCMXfN9ObGilU09/jKZ7o6gjSUFKEgHu7fKnksW',1),
+('Carmen', 'Sánchez', 'Vera', 'carmen.sanchez@ferramas.cl', '978901234', 'Los Aromos 505', '1993-11-20', '2023-08-15', TRUE, 4, 5, '2025-04-29', '66777888-9', '$2a$10$OyoWlKfchC/vzbGCMXfN9ObGilU09/jKZ7o6gjSUFKEgHu7fKnksW',2);
 
 
 

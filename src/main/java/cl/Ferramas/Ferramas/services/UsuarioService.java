@@ -11,11 +11,13 @@ import cl.Ferramas.Ferramas.entity.Rol;
 import cl.Ferramas.Ferramas.entity.Sucursal;
 import cl.Ferramas.Ferramas.entity.Usuario;
 
+import cl.Ferramas.Ferramas.exception.Controllerexception;
 import cl.Ferramas.Ferramas.mapper.ClienteMapper;
 import cl.Ferramas.Ferramas.repository.ComunRep;
 import cl.Ferramas.Ferramas.repository.RolRep;
 import cl.Ferramas.Ferramas.repository.SucursalRep;
 import cl.Ferramas.Ferramas.repository.UsuarioRep;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -84,7 +86,7 @@ public class UsuarioService {
 
         usuario.setComuna(comuna);
 
-        Rol rol = rolRepository.findById(registroDTO.getRol()).orElseThrow(() -> new RuntimeException("Rol no encontrada"));
+        Rol rol = rolRepository.findById(registroDTO.getRol()).orElseThrow(() -> new RuntimeException("Rol no encontrado"));
         usuario.setRol(rol);
 
         Sucursal sucursal = sucursalRep.findById(registroDTO.getSucursal()).orElseThrow(() -> new RuntimeException("Sucursal no encontrada"));
@@ -109,7 +111,7 @@ public class UsuarioService {
 
     // lista solo de clientes
     public List<ClienteDTO> listarClientes() {
-        List<Usuario> clientes = usuarioRepository.findByRolId(2L); // Ajusta el ID para que coincida con cliente
+        List<Usuario> clientes = usuarioRepository.findByRolId(2L); // Ajustar el ID para que coincida con cliente
         return clientes.stream()
                 .map(clienteMapper::usuarioToClienteDto)
                 .collect(Collectors.toList());
@@ -131,104 +133,63 @@ public class UsuarioService {
 
 
     @Transactional
-    public UsuarioDTO actualizarUsuario(Long id, RegistroUsuarioDTO usuarioDTO) {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
+    public ClienteDTO actualizarCliente(Long id, ClienteDTO clienteDTO) {
+        // Busca al usuario por ID, lanzar excepción si no existe
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new Controllerexception("Usuario con ID " + id + " no encontrado"));
 
-        if (usuarioOptional.isPresent()) {
-            Usuario usuario = usuarioOptional.get();
-
-            // Actualizar los campos básicos
-            usuario.setNombre(usuarioDTO.getNombre());
-            usuario.setApellidop(usuarioDTO.getApellidop());
-            usuario.setApellidom(usuarioDTO.getApellidom());
-            usuario.setEmail(usuarioDTO.getEmail());
-            usuario.setTelefono(usuarioDTO.getTelefono());
-            usuario.setDireccion(usuarioDTO.getDireccion());
-
-            // Si se entrega una nueva contraseña, actualizarla
-            if (usuarioDTO.getPassword() != null && !usuarioDTO.getPassword().isEmpty()) {
-                usuario.setPassword(passwordEncoder.encode(usuarioDTO.getPassword()));
-            }
-
-            // Actualizar comuna si se entrega
-            if (usuarioDTO.getComuna() != null) {
-                Comuna comuna = comunaRepository.findById(usuarioDTO.getComuna())
-                        .orElseThrow(() -> new RuntimeException("Comuna no encontrada"));
-                usuario.setComuna(comuna);
-            }
-
-            // Actualizar rol si se entrega
-            if (usuarioDTO.getRol() != null) {
-                Rol rol = rolRepository.findById(usuarioDTO.getRol())
-                        .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
-                usuario.setRol(rol);
-            }
-
-            // Actualizar sucursal si se entrega
-            if (usuarioDTO.getSucursal() != null) {
-                Sucursal sucursal = sucursalRep.findById(usuarioDTO.getSucursal())
-                        .orElseThrow(() -> new RuntimeException("Sucursal no encontrada"));
-                usuario.setSucursal(sucursal);
-            }
-
-            usuario = usuarioRepository.save(usuario);
-            return clienteMapper.usuarioToUsuarioDto(usuario);
-        }
-
-        return null;
-    }
-
-
-    @Transactional
-    public ClienteDTO actualizarCliente(Long id, RegistroClienteDTO clienteDTO) {
-        Optional<Usuario> usuarioOptional = usuarioRepository.findById(id);
-
-        if (usuarioOptional.isPresent()) {
-            Usuario usuario = usuarioOptional.get();
-
-            // Actualizar los campos básicos
+        // Actualizar campos básicos
+        if (clienteDTO.getNombre() != null) {
             usuario.setNombre(clienteDTO.getNombre());
-            usuario.setApellidom(clienteDTO.getApellidom());
+        }
+        if (clienteDTO.getApellidop() != null) {
             usuario.setApellidop(clienteDTO.getApellidop());
+        }
+        if (clienteDTO.getApellidom() != null) {
+            usuario.setApellidom(clienteDTO.getApellidom());
+        }
+        if (clienteDTO.getEmail() != null) {
             usuario.setEmail(clienteDTO.getEmail());
+        }
+        if (clienteDTO.getTelefono() != null) {
             usuario.setTelefono(clienteDTO.getTelefono());
+        }
+        if (clienteDTO.getDireccion() != null) {
             usuario.setDireccion(clienteDTO.getDireccion());
-
-            // Si se entrega una nueva contraseña, actualizarla
-            if (clienteDTO.getPassword() != null && !clienteDTO.getPassword().isEmpty()) {
-                usuario.setPassword(passwordEncoder.encode(clienteDTO.getPassword()));
-            }
-
-            // Actualizar comuna si se entrega
-            if (clienteDTO.getComuna() != null) {
-                Comuna comuna = comunaRepository.findById(clienteDTO.getComuna())
-                        .orElseThrow(() -> new RuntimeException("Comuna no encontrada"));
-                usuario.setComuna(comuna);
-            }
-
-            // Actualizar rol si se entrega
-            if (clienteDTO.getRol() != null) {
-                Rol rol = rolRepository.findById(clienteDTO.getRol())
-                        .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
-                usuario.setRol(rol);
-            }
-
-            usuario = usuarioRepository.save(usuario);
-            return clienteMapper.usuarioToClienteDto(usuario);
         }
 
-        return null;
+
+        // Actualizar comuna si se proporciona
+        if (clienteDTO.getComuna() != null) {
+            Comuna comuna = comunaRepository.findById(Long.valueOf(clienteDTO.getComuna()))
+                    .orElseThrow(() -> new EntityNotFoundException("Comuna no encontrada"));
+            usuario.setComuna(comuna);
+        }
+
+        // Actualizar rol si se proporciona
+        if (clienteDTO.getRol() != null) {
+            Rol rol = rolRepository.findById(clienteDTO.getRol())
+                    .orElseThrow(() -> new EntityNotFoundException("Rol no encontrado"));
+            usuario.setRol(rol);
+        }
+        if (clienteDTO.getActivo() != null) {
+            usuario.setActivo(clienteDTO.getActivo());
+        }
+
+        // Guardar y retornar DTO
+        usuario = usuarioRepository.save(usuario);
+        return clienteMapper.usuarioToClienteDto(usuario);
     }
 
 
-    @Transactional
+    /*@Transactional
     public boolean eliminarUsuario(Long id) {
         if (usuarioRepository.existsById(id)) {
             usuarioRepository.deleteById(id);
             return true;
         }
         return false;
-    }
+    }*/
 
 
     @Transactional
@@ -266,5 +227,16 @@ public class UsuarioService {
 
 
 
+    }
+
+    public boolean login(String email, String password) {
+        Optional<Usuario> optionalUsuario = usuarioRepository.findByEmail(email);
+
+        if (optionalUsuario.isPresent()) {
+            Usuario usuario = optionalUsuario.get();
+            return passwordEncoder.matches(password, usuario.getPassword());
+        }
+
+        return false;
     }
 }
