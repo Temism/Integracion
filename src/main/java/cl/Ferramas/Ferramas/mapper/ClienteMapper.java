@@ -91,8 +91,6 @@ public class ClienteMapper {
         responseDTO.setTelefono(usuario.getTelefono());
         responseDTO.setFechaRegistro(usuario.getFechaRegistro());
 
-
-
         return responseDTO;
     }
 

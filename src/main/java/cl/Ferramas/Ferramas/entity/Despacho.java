@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,13 +21,13 @@ public class Despacho {
     private Pedido pedido;
 
     @Column(name = "fecha_despacho")
-    private LocalDateTime fechaDespacho;
+    private LocalDate fechaDespacho;
 
     @Column(name = "fecha_entrega_estimada")
-    private LocalDateTime fechaEntregaEstimada;
+    private LocalDate fechaEntregaEstimada;
 
     @Column(name = "fecha_entrega_real")
-    private LocalDateTime fechaEntregaReal;
+    private LocalDate fechaEntregaReal;
 
     @Column(length = 100)
     private String transportista;
@@ -42,7 +43,7 @@ public class Despacho {
     private EstadoDespacho estado;
 
 
-    public Despacho(Long id, Pedido pedido, LocalDateTime fechaDespacho, LocalDateTime fechaEntregaEstimada, LocalDateTime fechaEntregaReal, String transportista, String numeroGuia, BigDecimal costoDespacho, EstadoDespacho estado) {
+    public Despacho(Long id, Pedido pedido, LocalDate fechaDespacho, LocalDate fechaEntregaEstimada, LocalDate fechaEntregaReal, String transportista, String numeroGuia, BigDecimal costoDespacho, EstadoDespacho estado) {
         this.despachoId = id;
         this.pedido = pedido;
         this.fechaDespacho = fechaDespacho;
@@ -74,27 +75,27 @@ public class Despacho {
         this.pedido = pedido;
     }
 
-    public LocalDateTime getFechaDespacho() {
+    public LocalDate getFechaDespacho() {
         return fechaDespacho;
     }
 
-    public void setFechaDespacho(LocalDateTime fechaDespacho) {
+    public void setFechaDespacho(LocalDate fechaDespacho) {
         this.fechaDespacho = fechaDespacho;
     }
 
-    public LocalDateTime getFechaEntregaEstimada() {
+    public LocalDate getFechaEntregaEstimada() {
         return fechaEntregaEstimada;
     }
 
-    public void setFechaEntregaEstimada(LocalDateTime fechaEntregaEstimada) {
+    public void setFechaEntregaEstimada(LocalDate fechaEntregaEstimada) {
         this.fechaEntregaEstimada = fechaEntregaEstimada;
     }
 
-    public LocalDateTime getFechaEntregaReal() {
+    public LocalDate getFechaEntregaReal() {
         return fechaEntregaReal;
     }
 
-    public void setFechaEntregaReal(LocalDateTime fechaEntregaReal) {
+    public void setFechaEntregaReal(LocalDate fechaEntregaReal) {
         this.fechaEntregaReal = fechaEntregaReal;
     }
 

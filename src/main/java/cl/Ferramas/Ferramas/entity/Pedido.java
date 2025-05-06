@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class Pedido {
     private Sucursal sucursal;
 
     @Column(name = "fecha_pedido", nullable = false)
-    private LocalDateTime fechaPedido = LocalDateTime.now();
+    private LocalDate fechaPedido = LocalDate.now();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estado_id", nullable = false)
@@ -73,7 +74,7 @@ public class Pedido {
     private Despacho despacho;
 
 
-    public Pedido(Long id, String codigoPedido, Usuario cliente, Sucursal sucursal, LocalDateTime fechaPedido, EstadoPedido estado, TipoEntrega tipoEntrega, String direccionEntrega, BigDecimal subtotal, BigDecimal descuento, BigDecimal iva, BigDecimal total, String notas, Usuario vendedor, List<DetallePedido> detalles, List<Pago> pagos, List<HistorialEstadoPedido> historialEstados, Despacho despacho) {
+    public Pedido(Long id, String codigoPedido, Usuario cliente, Sucursal sucursal, LocalDate fechaPedido, EstadoPedido estado, TipoEntrega tipoEntrega, String direccionEntrega, BigDecimal subtotal, BigDecimal descuento, BigDecimal iva, BigDecimal total, String notas, Usuario vendedor, List<DetallePedido> detalles, List<Pago> pagos, List<HistorialEstadoPedido> historialEstados, Despacho despacho) {
         this.pedidoId = id;
         this.codigoPedido = codigoPedido;
         this.cliente = cliente;
@@ -129,11 +130,11 @@ public class Pedido {
         this.sucursal = sucursal;
     }
 
-    public LocalDateTime getFechaPedido() {
+    public LocalDate getFechaPedido() {
         return fechaPedido;
     }
 
-    public void setFechaPedido(LocalDateTime fechaPedido) {
+    public void setFechaPedido(LocalDate fechaPedido) {
         this.fechaPedido = fechaPedido;
     }
 

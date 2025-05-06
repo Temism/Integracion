@@ -4,6 +4,7 @@ package cl.Ferramas.Ferramas.controller;
 
 
 import cl.Ferramas.Ferramas.dto.*;
+import cl.Ferramas.Ferramas.entity.Usuario;
 import cl.Ferramas.Ferramas.services.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuario")
@@ -25,6 +27,20 @@ public class UsuarioController {
         RegistroUsuarioDTO usuarioregistrado = clienteService.registrarUsuario(registroDTO);
         return new ResponseEntity<>(usuarioregistrado, HttpStatus.CREATED);
     }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioDTO> usuarioPorId(@PathVariable Long id) {
+        UsuarioDTO usuario = clienteService.buscarUsuarioPorId(id);
+
+        if (usuario != null) {
+            return ResponseEntity.ok(usuario);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 
 
     @GetMapping("/listausuarios")
