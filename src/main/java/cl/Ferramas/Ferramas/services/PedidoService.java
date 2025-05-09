@@ -71,6 +71,15 @@ public class PedidoService {
         return pedidoMapper.toDTO(pedido);
     }
 
+    @Transactional
+    public void actualizarComprobante(Long pedidoId, String url) {
+    Pedido pedido = pedidoRep.findById(pedidoId)
+        .orElseThrow(() -> new RuntimeException("Pedido no encontrado"));
+        pedido.setComprobanteUrl(url);
+        pedidoRep.save(pedido);
+}
+
+
 
 
 

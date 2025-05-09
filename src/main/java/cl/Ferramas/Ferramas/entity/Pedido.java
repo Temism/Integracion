@@ -19,8 +19,16 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pedidoId;
 
+    @Column(name = "comprobante_url")
+    private String comprobanteUrl;
+
     @Column(name = "codigo_pedido", nullable = false, unique = true, length = 20)
     private String codigoPedido;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "metodo_pago_id")
+    private MetodoPago metodoPago;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
@@ -74,7 +82,7 @@ public class Pedido {
     private Despacho despacho;
 
 
-    public Pedido(Long id, String codigoPedido, Usuario cliente, Sucursal sucursal, LocalDate fechaPedido, EstadoPedido estado, TipoEntrega tipoEntrega, String direccionEntrega, BigDecimal subtotal, BigDecimal descuento, BigDecimal iva, BigDecimal total, String notas, Usuario vendedor, List<DetallePedido> detalles, List<Pago> pagos, List<HistorialEstadoPedido> historialEstados, Despacho despacho) {
+    public Pedido(Long id, String codigoPedido, Usuario cliente, Sucursal sucursal, LocalDate fechaPedido, EstadoPedido estado, TipoEntrega tipoEntrega, String direccionEntrega, BigDecimal subtotal, BigDecimal descuento, BigDecimal iva, BigDecimal total, String notas, Usuario vendedor, List<DetallePedido> detalles, List<Pago> pagos, List<HistorialEstadoPedido> historialEstados, Despacho despacho, String comprobanteUrl) {
         this.pedidoId = id;
         this.codigoPedido = codigoPedido;
         this.cliente = cliente;
@@ -93,6 +101,7 @@ public class Pedido {
         this.pagos = pagos;
         this.historialEstados = historialEstados;
         this.despacho = despacho;
+        this.comprobanteUrl = comprobanteUrl;
     }
 
     public Pedido() {
@@ -104,6 +113,22 @@ public class Pedido {
 
     public void setPedidoId(Long pedidoId) {
         this.pedidoId = pedidoId;
+    }
+
+    public String getComprobanteUrl() {
+        return comprobanteUrl;
+    }
+    
+    public void setComprobanteUrl(String comprobanteUrl) {
+        this.comprobanteUrl = comprobanteUrl;
+    }
+
+    public MetodoPago getMetodoPago() {
+        return metodoPago;
+    }
+
+    public void setMetodoPago(MetodoPago metodoPago) {
+        this.metodoPago = metodoPago;
     }
 
     public String getCodigoPedido() {
