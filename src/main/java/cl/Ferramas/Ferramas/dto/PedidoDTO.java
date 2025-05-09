@@ -3,6 +3,8 @@ package cl.Ferramas.Ferramas.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import cl.Ferramas.Ferramas.entity.MetodoPago;
+
 public class PedidoDTO {
 
     private Long id;
@@ -21,9 +23,11 @@ public class PedidoDTO {
     private Long vendedorId;
     private Long sucursalId;
     private Long tipoEntregaId;
+    private String comprobanteUrl;
+    private MetodoPago metodoPago;
 
 
-    public PedidoDTO(Long id, String codigo,String estado,String tipoentrega, LocalDate fechaPedido, String direccionEntrega, BigDecimal subtotal, BigDecimal total, BigDecimal descuento, BigDecimal iva, String nota, Long estadoId, Long clienteId, Long vendedorId, Long sucursalId, Long tipoEntregaId) {
+    public PedidoDTO(Long id, String codigo,String estado,String tipoentrega, LocalDate fechaPedido, String direccionEntrega, BigDecimal subtotal, BigDecimal total, BigDecimal descuento, BigDecimal iva, String nota, Long estadoId, Long clienteId, Long vendedorId, Long sucursalId, Long tipoEntregaId, String comprobanteUrl) {
         this.estado = estado;
         this.id = id;
         this.tipoentrega= tipoentrega;
@@ -40,6 +44,7 @@ public class PedidoDTO {
         this.vendedorId = vendedorId;
         this.sucursalId = sucursalId;
         this.tipoEntregaId = tipoEntregaId;
+        this.comprobanteUrl = comprobanteUrl;
     }
 
     public String getTipoentrega() {
@@ -172,4 +177,21 @@ public class PedidoDTO {
     public void setTipoEntregaId(Long tipoEntregaId) {
         this.tipoEntregaId = tipoEntregaId;
     }
+
+    public String getComprobanteUrl() {
+        return comprobanteUrl;
+    }
+
+    public void setComprobanteUrl(String comprobanteUrl) {
+        this.comprobanteUrl = comprobanteUrl;
+    }
+
+    public MetodoPago getMetodoPago() {
+        return metodoPago;
+    }
+
+    public void setMetodoPago(MetodoPago metodoPago) {
+        this.metodoPago = metodoPago;
+    }
+
 }

@@ -2,6 +2,7 @@ package cl.Ferramas.Ferramas.controller;
 
 
 
+import cl.Ferramas.Ferramas.dto.ComprobanteDTO;
 import cl.Ferramas.Ferramas.dto.PedidoDTO;
 
 
@@ -41,6 +42,13 @@ public class PedidoController {
         PedidoDTO pedido = pedidoService.registrarPedido(PedidoDTO);
         return new ResponseEntity<>(pedido, HttpStatus.CREATED);
     }
+
+    @PostMapping("/comprobante/guardar")
+    public ResponseEntity<String> guardarComprobante(@RequestBody ComprobanteDTO dto) {
+    pedidoService.actualizarComprobante(dto.getPedidoId(), dto.getUrlComprobante());
+    return ResponseEntity.ok("Comprobante guardado con éxito");
+}
+
 
 
 

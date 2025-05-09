@@ -24,6 +24,9 @@ public class PedidoMapper {
         dto.setNota(pedido.getNotas());
         dto.setEstado(pedido.getEstado().getNombre());
         dto.setTipoentrega(pedido.getTipoEntrega().getNombre());
+        dto.setComprobanteUrl(pedido.getComprobanteUrl());
+        dto.setMetodoPago(pedido.getMetodoPago());
+
 
 
         return dto;
@@ -45,6 +48,9 @@ public class PedidoMapper {
         pedido.setDescuento(dto.getDescuento());
         pedido.setIva(dto.getIva());
         pedido.setNotas(dto.getNota());
+        pedido.setComprobanteUrl(dto.getComprobanteUrl());
+        pedido.setMetodoPago(dto.getMetodoPago());
+
 
 
 
