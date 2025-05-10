@@ -22,7 +22,7 @@ public class ComunaController {
     @Autowired
     private ComunaService comunaService;
 
-    @GetMapping("/listacomunas")
+    @GetMapping
     public List<ComunaDTO> getAll() {
         return comunaService.listaComunas();
     }
@@ -38,7 +38,7 @@ public class ComunaController {
         }
     }
 
-    @PostMapping("/registrarcomuna")
+    @PostMapping
     public ResponseEntity<ComunaDTO> registrarcomuna(@Valid @RequestBody ComunaDTO comunaDTO) {
         ComunaDTO comuna = comunaService.guardarComuna(comunaDTO);
         return new ResponseEntity<>(comuna, HttpStatus.CREATED);

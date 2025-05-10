@@ -43,7 +43,7 @@ public class UsuarioController {
 
 
 
-    @GetMapping("/listausuarios")
+    @GetMapping("/ListaUsuarios")
     public List<UsuarioDTO> getAll() {
         return clienteService.listarUsuarios();
     }
