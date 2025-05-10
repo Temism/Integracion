@@ -22,7 +22,7 @@ public class DetallePedidoController {
     private DetallePedidoService detallePedidoService;
 
 
-    @GetMapping("/listaDetalles")
+    @GetMapping
     public List<DetallePedidoDTO> getAll() {
         return detallePedidoService.listarDetallesPedidos();
     }
@@ -37,7 +37,7 @@ public class DetallePedidoController {
         }
     }
 
-    @PostMapping("/registrardetalle")
+    @PostMapping
     public ResponseEntity<DetallePedidoDTO> registrarDetallePedido(@Valid @RequestBody DetallePedidoDTO detallePedidoDTO) {
         DetallePedidoDTO detalle = detallePedidoService.registrarproducto(detallePedidoDTO);
         return new ResponseEntity<>(detalle, HttpStatus.CREATED);

@@ -23,7 +23,7 @@ public class ProductoController {
     @Autowired
     private ProductoService productoService;
 
-    @PostMapping("/registrarproducto")
+    @PostMapping
     public ResponseEntity<RegistroProductoDTO> registrarproducto(@Valid @RequestBody RegistroProductoDTO registroDTO) {
         RegistroProductoDTO productoregistrado = productoService.registrarproducto(registroDTO);
         return new ResponseEntity<>(productoregistrado, HttpStatus.CREATED);
@@ -41,7 +41,7 @@ public class ProductoController {
         }
     }
 
-    @GetMapping("/listarproductos")
+    @GetMapping
     public List<ProductoDTO> getAll() {
         return productoService.listarProductos();
     }

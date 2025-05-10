@@ -22,7 +22,7 @@ public class PedidoController {
     @Autowired
     private PedidoService pedidoService;
 
-    @GetMapping("/listarpedidos")
+    @GetMapping
     public List<PedidoDTO> getAll() {
         return pedidoService.listarpedidos();
     }
@@ -37,7 +37,7 @@ public class PedidoController {
         }
     }
 
-    @PostMapping("/registrarpedido")
+    @PostMapping
     public ResponseEntity<PedidoDTO> registrarpedido(@Valid @RequestBody PedidoDTO PedidoDTO) {
         PedidoDTO pedido = pedidoService.registrarPedido(PedidoDTO);
         return new ResponseEntity<>(pedido, HttpStatus.CREATED);

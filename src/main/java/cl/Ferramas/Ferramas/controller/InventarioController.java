@@ -23,7 +23,7 @@ public class InventarioController {
     @Autowired
     private InventarioService inventarioService;
 
-    @GetMapping("/listainventario")
+    @GetMapping
     public List<Inventario> getAll() {
         return inventarioService.listarInventario();
     }
@@ -50,7 +50,7 @@ public class InventarioController {
         }
     }
 
-    @PostMapping("/registrarInventario")
+    @PostMapping
     public ResponseEntity<InventarioDTO> registrarInventario(@Valid @RequestBody InventarioDTO inventarioDTO) {
         InventarioDTO inventario = inventarioService.guardarInventario(inventarioDTO);
         return new ResponseEntity<>(inventario, HttpStatus.CREATED);

@@ -23,7 +23,7 @@ public class DespachoController {
     @Autowired
     private DespachoService despachoService;
 
-    @GetMapping("/listadespachos")
+    @GetMapping
     public List<DespachoDTO> getAll() {
         return despachoService.listardespachos();
     }
@@ -38,7 +38,7 @@ public class DespachoController {
         }
     }
 
-    @PostMapping("/registrardespacho")
+    @PostMapping
     public ResponseEntity<DespachoDTO> registrarDespacho(@Valid @RequestBody DespachoDTO despachoDTO) {
         DespachoDTO despacho = despachoService.registrarproducto(despachoDTO);
         return new ResponseEntity<>(despacho, HttpStatus.CREATED);

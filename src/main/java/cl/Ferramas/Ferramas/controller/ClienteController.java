@@ -17,20 +17,20 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("/cliente")
 public class ClienteController {
 
     @Autowired
     private UsuarioService clienteService;
 
 
-    @PostMapping("/registrocli")
+    @PostMapping
     public ResponseEntity<RegistroClienteDTO> registrarCliente(@Valid @RequestBody RegistroClienteDTO registroDTO) {
         RegistroClienteDTO clienteRegistrado = clienteService.registrarCliente(registroDTO);
         return new ResponseEntity<>(clienteRegistrado, HttpStatus.CREATED);
     }
 
-    @GetMapping("/listaclientes")
+    @GetMapping
     public List<ClienteDTO> getAll() {
         return clienteService.listarClientes();
     }
