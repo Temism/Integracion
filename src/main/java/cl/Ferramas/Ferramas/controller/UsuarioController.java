@@ -22,7 +22,7 @@ public class UsuarioController {
     @Autowired
     private UsuarioService clienteService;
 
-    @PostMapping("/registrouser")
+    @PostMapping
     public ResponseEntity<RegistroUsuarioDTO> registrarCliente(@Valid @RequestBody RegistroUsuarioDTO registroDTO) {
         RegistroUsuarioDTO usuarioregistrado = clienteService.registrarUsuario(registroDTO);
         return new ResponseEntity<>(usuarioregistrado, HttpStatus.CREATED);
@@ -43,7 +43,7 @@ public class UsuarioController {
 
 
 
-    @GetMapping("/ListaUsuarios")
+    @GetMapping
     public List<UsuarioDTO> getAll() {
         return clienteService.listarUsuarios();
     }
