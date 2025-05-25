@@ -13,11 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Collectors;
 
 @Service
 public class ReporteService {
@@ -45,19 +48,19 @@ public class ReporteService {
             Paragraph titulo = new Paragraph("Informe de Ventas", tituloFont);
             titulo.setAlignment(Element.ALIGN_CENTER);
             documento.add(titulo);
-            documento.add(new Paragraph(" ")); // espacio
+            documento.add(new Paragraph(" "));
 
             PdfPTable tabla = new PdfPTable(5);
             tabla.setWidthPercentage(100);
             tabla.setWidths(new float[]{2f, 2f, 2f, 2f, 2f});
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
             tabla.addCell(celdaEncabezado("N° Pedido"));
             tabla.addCell(celdaEncabezado("Cliente"));
             tabla.addCell(celdaEncabezado("Fecha"));
             tabla.addCell(celdaEncabezado("Estado"));
             tabla.addCell(celdaEncabezado("Comprobante"));
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
             for (Pedido pedido : pedidos) {
                 tabla.addCell(String.valueOf(pedido.getPedidoId()));
@@ -164,6 +167,35 @@ public class ReporteService {
         } catch (Exception e) {
             throw new RuntimeException("Error al generar el informe de productos más vendidos: " + e.getMessage(), e);
         }
+    }
+
+    public Map<String, Object> obtenerResumenDashboard() {
+        Map<String, Object> resumen = new HashMap<>();
+
+        List<Pedido> pedidos = pedidoRep.findAll();
+        List<Pago> pagos = pagoRep.findAll();
+        List<DetallePedido> detalles = detallePedidoRep.findAll();
+
+        resumen.put("totalPedidos", pedidos.size());
+
+        long conComprobante = pedidos.stream().filter(p -> p.getComprobanteUrl() != null).count();
+        resumen.put("pedidosConComprobante", conComprobante);
+        resumen.put("pedidosSinComprobante", pedidos.size() - conComprobante);
+
+        resumen.put("totalPagos", pagos.size());
+
+        BigDecimal montoTotal = pagos.stream()
+                .map(Pago::getMonto)
+                .filter(Objects::nonNull)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        resumen.put("montoRecaudado", montoTotal);
+
+        int productosVendidos = detalles.stream()
+                .mapToInt(d -> d.getCantidad() != null ? d.getCantidad() : 0)
+                .sum();
+        resumen.put("productosVendidos", productosVendidos);
+
+        return resumen;
     }
 
     private PdfPCell celdaEncabezado(String texto) {

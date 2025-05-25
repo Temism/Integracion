@@ -4,6 +4,7 @@ import cl.Ferramas.Ferramas.services.ReporteService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 import java.io.IOException;
 
@@ -34,5 +35,10 @@ public class ReporteController {
         response.setContentType("application/pdf");
         response.setHeader("Content-Disposition", "inline; filename=productos_mas_vendidos.pdf");
         reporteService.generarInformeProductosMasVendidos(response);
+    }
+
+    @GetMapping("/dashboard")
+    public Map<String, Object> obtenerResumenDashboard() {
+        return reporteService.obtenerResumenDashboard();
     }
 }
