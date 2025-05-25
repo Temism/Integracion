@@ -2,6 +2,8 @@ package cl.Ferramas.Ferramas.services;
 
 import cl.Ferramas.Ferramas.entity.Pago;
 import cl.Ferramas.Ferramas.entity.Pedido;
+import cl.Ferramas.Ferramas.entity.DetallePedido;
+import cl.Ferramas.Ferramas.repository.DetallePedidoRep;
 import cl.Ferramas.Ferramas.repository.PagoRep;
 import cl.Ferramas.Ferramas.repository.PedidoRep;
 import com.itextpdf.text.*;
@@ -11,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.List;
 
 @Service
@@ -23,6 +27,9 @@ public class ReporteService {
 
     @Autowired
     private PagoRep pagoRep;
+
+    @Autowired
+    private DetallePedidoRep detallePedidoRep;
 
     public void generarInformeVentas(HttpServletResponse response) {
         try {
@@ -95,8 +102,6 @@ public class ReporteService {
             tabla.addCell(celdaEncabezado("Estado"));
             tabla.addCell(celdaEncabezado("Detalles"));
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
             for (Pago pago : pagos) {
                 tabla.addCell(String.valueOf(pago.getPagoId()));
                 tabla.addCell("Pedido #" + pago.getPedido().getPedidoId());
@@ -111,6 +116,53 @@ public class ReporteService {
             out.close();
         } catch (Exception e) {
             throw new RuntimeException("Error al generar el informe de pagos: " + e.getMessage(), e);
+        }
+    }
+
+    public void generarInformeProductosMasVendidos(HttpServletResponse response) {
+        try {
+            List<DetallePedido> detalles = detallePedidoRep.findAll();
+
+            Map<String, Integer> resumen = new HashMap<>();
+            for (DetallePedido detalle : detalles) {
+                String nombre = detalle.getProducto().getNombre();
+                int cantidad = detalle.getCantidad() != null ? detalle.getCantidad() : 0;
+                resumen.put(nombre, resumen.getOrDefault(nombre, 0) + cantidad);
+            }
+
+            List<Map.Entry<String, Integer>> top = resumen.entrySet().stream()
+                    .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
+                    .collect(Collectors.toList());
+
+            Document documento = new Document();
+            OutputStream out = response.getOutputStream();
+            PdfWriter.getInstance(documento, out);
+
+            documento.open();
+
+            Font tituloFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
+            Paragraph titulo = new Paragraph("Productos más vendidos", tituloFont);
+            titulo.setAlignment(Element.ALIGN_CENTER);
+            documento.add(titulo);
+            documento.add(new Paragraph(" "));
+
+            PdfPTable tabla = new PdfPTable(2);
+            tabla.setWidthPercentage(100);
+            tabla.setWidths(new float[]{3f, 1f});
+
+            tabla.addCell(celdaEncabezado("Producto"));
+            tabla.addCell(celdaEncabezado("Cantidad Vendida"));
+
+            for (Map.Entry<String, Integer> entry : top) {
+                tabla.addCell(entry.getKey());
+                tabla.addCell(String.valueOf(entry.getValue()));
+            }
+
+            documento.add(tabla);
+            documento.close();
+            out.close();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al generar el informe de productos más vendidos: " + e.getMessage(), e);
         }
     }
 

@@ -28,4 +28,11 @@ public class ReporteController {
         response.setHeader("Content-Disposition", "inline; filename=informe_pagos.pdf");
         reporteService.generarInformePagos(response);
     }
+    
+    @GetMapping("/productos-mas-vendidos")
+    public void generarInformeProductosMasVendidos(HttpServletResponse response) {
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "inline; filename=productos_mas_vendidos.pdf");
+        reporteService.generarInformeProductosMasVendidos(response);
+    }
 }
