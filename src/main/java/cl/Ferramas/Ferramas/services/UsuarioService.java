@@ -182,14 +182,14 @@ public class UsuarioService {
     }
 
 
-    /*@Transactional
+    @Transactional
     public boolean eliminarUsuario(Long id) {
         if (usuarioRepository.existsById(id)) {
             usuarioRepository.deleteById(id);
             return true;
         }
         return false;
-    }*/
+    }
 
 
     @Transactional

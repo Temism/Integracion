@@ -98,10 +98,14 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas.");
         }
     }
-
-
-
-
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> eliminarUsuario(@PathVariable Long id) {
+        boolean eliminado = clienteService.eliminarUsuario(id);
+        if (eliminado) {
+            return ResponseEntity.ok("Usuario eliminado correctamente.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
+        }
+    }
 
 }
