@@ -21,4 +21,11 @@ public class ReporteController {
 
         reporteService.generarInformeVentas(response);
     }
+    
+    @GetMapping("/pagos")
+    public void generarInformePagos(HttpServletResponse response) {
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition", "inline; filename=informe_pagos.pdf");
+        reporteService.generarInformePagos(response);
+    }
 }
