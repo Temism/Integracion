@@ -40,7 +40,7 @@ public class Usuario implements UserDetails {
     @JoinColumn(name = "comuna_id")
     private Comuna comuna;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rol_id", nullable = false)
     private Rol rol;
 

@@ -1,6 +1,9 @@
 package cl.Ferramas.Ferramas.config;
 
 import cl.Ferramas.Ferramas.security.CustomUserDetailsService;
+
+import org.springframework.security.config.Customizer;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,18 +29,20 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/usuario", "/usuario/login", "/registro", "/public/**").permitAll()
+                // Rutas públicas
+                .requestMatchers("/login", "/usuario", "/usuario/login", "/usuario/publico", "/registro", "/public/**").permitAll()
+
+                // Rutas protegidas por rol
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/vendedor/**").hasRole("VENDEDOR")
                 .requestMatchers("/bodeguero/**").hasRole("BODEGUERO")
                 .requestMatchers("/cliente/**").hasRole("CLIENTE")
                 .requestMatchers("/despacho/**").hasRole("DESPACHADOR")
+
+                // Todo lo demás requiere autenticación
                 .anyRequest().authenticated()
             )
-            .formLogin(form -> form
-                .loginPage("/login") // Puedes personalizar esta ruta
-                .permitAll()
-            )
+            .httpBasic(Customizer.withDefaults())
             .logout(logout -> logout.permitAll());
 
         return http.build();
@@ -48,7 +53,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // Para autenticación manual si es necesario
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();

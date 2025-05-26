@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -104,4 +105,15 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
         }
     }
+    @GetMapping("/publico")
+    public ResponseEntity<String> accesoPublico() {
+        return ResponseEntity.ok("Esta ruta es pública y accesible para todos.");
+    }
+
+    @GetMapping("/admin/solo-admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> accesoSoloAdmin() {
+        return ResponseEntity.ok("Esta ruta es solo para usuarios con rol ADMIN.");
+    }
+
 }
