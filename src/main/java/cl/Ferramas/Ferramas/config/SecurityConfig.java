@@ -1,15 +1,15 @@
 package cl.Ferramas.Ferramas.config;
 
 import cl.Ferramas.Ferramas.security.CustomUserDetailsService;
-
-import org.springframework.security.config.Customizer;
-
+import cl.Ferramas.Ferramas.security.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -19,9 +19,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomUserDetailsService userDetailsService;
+    private final JwtAuthorizationFilter jwtAuthorizationFilter;
 
-    public SecurityConfig(CustomUserDetailsService userDetailsService) {
+    public SecurityConfig(CustomUserDetailsService userDetailsService, JwtAuthorizationFilter jwtAuthorizationFilter) {
         this.userDetailsService = userDetailsService;
+        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
     }
 
     @Bean
@@ -30,7 +32,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 // Rutas públicas
-                .requestMatchers("/login", "/usuario", "/usuario/login", "/usuario/publico", "/registro", "/public/**").permitAll()
+                .requestMatchers("/auth/login", "/usuario", "/usuario/publico", "/registro", "/public/**").permitAll()
 
                 // Rutas protegidas por rol
                 .requestMatchers("/admin/**").hasRole("ADMIN")
@@ -42,7 +44,7 @@ public class SecurityConfig {
                 // Todo lo demás requiere autenticación
                 .anyRequest().authenticated()
             )
-            .httpBasic(Customizer.withDefaults())
+            .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class) // ⬅️ JWT
             .logout(logout -> logout.permitAll());
 
         return http.build();
