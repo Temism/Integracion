@@ -5,14 +5,13 @@ import cl.Ferramas.Ferramas.security.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -34,17 +33,36 @@ public class SecurityConfig {
                 // Rutas públicas
                 .requestMatchers("/auth/login", "/usuario", "/usuario/publico", "/registro", "/public/**").permitAll()
 
-                // Rutas protegidas por rol
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/vendedor/**").hasRole("VENDEDOR")
-                .requestMatchers("/bodeguero/**").hasRole("BODEGUERO")
-                .requestMatchers("/cliente/**").hasRole("CLIENTE")
-                .requestMatchers("/despacho/**").hasRole("DESPACHADOR")
+                // Cliente
+                .requestMatchers(
+                    "/cliente/**", "/catalogo/**", "/producto/**", "/carrito/**", "/compra/**",
+                    "/pedido", "/pedido/**", "/pago", "/pago/**", "/detallepedido/**"
+                ).hasAnyRole("CLIENTE", "ADMIN")
+
+                // Vendedor
+                .requestMatchers(
+                    "/pedido/**", "/detallepedido/**", "/producto/**", "/usuario/usuarioporrol/**",
+                    "/usuario/usuarioporsucursal/**", "/usuario", "/usuario/**"
+                ).hasAnyRole("VENDEDOR", "ADMIN")
+
+                // Bodeguero
+                .requestMatchers(
+                    "/inventario/**", "/movimientoinventario/**", "/producto/**", "/marca/**",
+                    "/categoria/**", "/tipomov/**"
+                ).hasAnyRole("BODEGUERO", "ADMIN")
+
+                // Despachador
+                .requestMatchers(
+                    "/despacho/**", "/estadodespacho/**"
+                ).hasAnyRole("DESPACHADOR", "ADMIN")
+
+                // Reportes solo para Admin
+                .requestMatchers("/reporte/**").hasRole("ADMIN")
 
                 // Todo lo demás requiere autenticación
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class) // ⬅️ JWT
+            .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
             .logout(logout -> logout.permitAll());
 
         return http.build();

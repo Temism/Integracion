@@ -27,7 +27,7 @@ public class AuthController {
         Usuario usuario = usuarioRep.findByEmail(loginRequest.getEmail()).orElse(null);
 
         if (usuario != null && passwordEncoder.matches(loginRequest.getPassword(), usuario.getPassword())) {
-            String token = jwtUtil.generateToken(usuario.getEmail());
+            String token = jwtUtil.generateTokenConRol(usuario.getEmail(), usuario.getRol().getNombre());
             return ResponseEntity.ok().body("{\"token\": \"" + token + "\"}");
         }
 

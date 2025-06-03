@@ -2,6 +2,7 @@ package cl.Ferramas.Ferramas.entity;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
@@ -263,7 +264,7 @@ public class Usuario implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> "ROLE_" + rol.getNombre().toUpperCase());
+        return List.of(new SimpleGrantedAuthority("ROLE_" + rol.getNombre().toUpperCase()));
     }
 
     @Override
