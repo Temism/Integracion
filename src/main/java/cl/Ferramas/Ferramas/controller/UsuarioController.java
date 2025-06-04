@@ -4,7 +4,7 @@ package cl.Ferramas.Ferramas.controller;
 
 
 import cl.Ferramas.Ferramas.dto.*;
-import cl.Ferramas.Ferramas.entity.Usuario;
+
 import cl.Ferramas.Ferramas.services.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuario")

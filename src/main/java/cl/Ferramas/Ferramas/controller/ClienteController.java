@@ -3,7 +3,6 @@ package cl.Ferramas.Ferramas.controller;
 import cl.Ferramas.Ferramas.dto.CambioPasswordDTO;
 import cl.Ferramas.Ferramas.dto.ClienteDTO;
 import cl.Ferramas.Ferramas.dto.RegistroClienteDTO;
-import cl.Ferramas.Ferramas.dto.UsuarioDTO;
 import cl.Ferramas.Ferramas.services.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
