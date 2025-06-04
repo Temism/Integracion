@@ -1,27 +1,29 @@
 package cl.Ferramas.Ferramas.entity;
 
-
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-
 
 @Entity
 @Table(name = "usuario")
-public class Usuario {
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long usuarioId;
-    @Column( nullable = false)
+    @Column(nullable = false)
     private String email;
-    @Column( nullable = false)
-    private String apellidom ;
+    @Column(nullable = false)
+    private String apellidom;
     @Column(nullable = false)
     private String password;
-    @Column( nullable = false)
+    @Column(nullable = false)
     private String nombre;
     @Column(nullable = false)
     private String apellidop;
@@ -35,12 +37,11 @@ public class Usuario {
     private String Direccion;
     private LocalDate fechaNacimiento;
 
-
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "comuna_id")
     private Comuna comuna;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "rol_id", nullable = false)
     private Rol rol;
 
@@ -52,21 +53,19 @@ public class Usuario {
     private List<Pedido> pedidos = new ArrayList<>();
 
     @OneToMany(mappedBy = "vendedor")
-
     private List<Pedido> pedidosVendidos = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario")
-
     private List<HistorialPrecio> historialPrecios = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario")
-
     private List<MovimientoInventario> movimientosInventario = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario")
-
     private List<HistorialEstadoPedido> historialEstadosPedido = new ArrayList<>();
 
+    public Usuario() {
+    }
 
     public Usuario(Long usuarioId, String email, String apellidom, String password, String nombre, String apellidop, String rut, String telefono, LocalDate fechaRegistro, LocalDate ultimoLogin, Boolean activo, String direccion, LocalDate fechaNacimiento, Comuna comuna, Rol rol, Sucursal sucursal, List<Pedido> pedidos, List<Pedido> pedidosVendidos, List<HistorialPrecio> historialPrecios, List<MovimientoInventario> movimientosInventario, List<HistorialEstadoPedido> historialEstadosPedido) {
         this.usuarioId = usuarioId;
@@ -90,9 +89,6 @@ public class Usuario {
         this.historialPrecios = historialPrecios;
         this.movimientosInventario = movimientosInventario;
         this.historialEstadosPedido = historialEstadosPedido;
-    }
-
-    public Usuario() {
     }
 
     public Long getUsuarioId() {
@@ -119,6 +115,7 @@ public class Usuario {
         this.apellidom = apellidom;
     }
 
+    @Override
     public String getPassword() {
         return password;
     }
@@ -261,5 +258,37 @@ public class Usuario {
 
     public void setHistorialEstadosPedido(List<HistorialEstadoPedido> historialEstadosPedido) {
         this.historialEstadosPedido = historialEstadosPedido;
+    }
+
+    // Métodos requeridos por UserDetails
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + rol.getNombre().toUpperCase()));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return activo != null ? activo : true;
     }
 }

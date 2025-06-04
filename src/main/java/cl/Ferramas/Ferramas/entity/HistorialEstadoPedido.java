@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class HistorialEstadoPedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long historiaEstadoPedidolId;
+    private Long historialEstadoPedidoId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pedido_id", nullable = false)
@@ -36,7 +36,7 @@ public class HistorialEstadoPedido {
     private String comentario;
 
     public HistorialEstadoPedido(Long id, Pedido pedido, EstadoPedido estadoAnterior, EstadoPedido estadoNuevo, Usuario usuario, LocalDateTime fechaCambio, String comentario) {
-        this.historiaEstadoPedidolId = id;
+        this.historialEstadoPedidoId = id;
         this.pedido = pedido;
         this.estadoAnterior = estadoAnterior;
         this.estadoNuevo = estadoNuevo;
@@ -49,12 +49,12 @@ public class HistorialEstadoPedido {
     }
 
 
-    public Long getHistoriaEstadoPedidolId() {
-        return historiaEstadoPedidolId;
+    public Long gethistorialEstadoPedidoId() {
+        return historialEstadoPedidoId;
     }
 
-    public void setHistoriaEstadoPedidolId(Long historiaEstadoPedidolId) {
-        this.historiaEstadoPedidolId = historiaEstadoPedidolId;
+    public void sethistorialEstadoPedidoId(Long historialEstadoPedidoId) {
+        this.historialEstadoPedidoId = historialEstadoPedidoId;
     }
 
     public Pedido getPedido() {

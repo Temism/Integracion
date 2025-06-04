@@ -1,12 +1,10 @@
 package cl.Ferramas.Ferramas.controller;
 
-
-
 import cl.Ferramas.Ferramas.dto.ComprobanteDTO;
 import cl.Ferramas.Ferramas.dto.PedidoDTO;
-
-
+import cl.Ferramas.Ferramas.dto.CambioEstadoDTO; // ✅ Nuevo DTO
 import cl.Ferramas.Ferramas.services.PedidoService;
+
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,12 +43,21 @@ public class PedidoController {
 
     @PostMapping("/comprobante/guardar")
     public ResponseEntity<String> guardarComprobante(@RequestBody ComprobanteDTO dto) {
-    pedidoService.actualizarComprobante(dto.getPedidoId(), dto.getUrlComprobante());
-    return ResponseEntity.ok("Comprobante guardado con éxito");
-}
+        pedidoService.actualizarComprobante(dto.getPedidoId(), dto.getUrlComprobante());
+        return ResponseEntity.ok("Comprobante guardado con éxito");
+    }
 
-
-
-
-
+    // ✅ NUEVO: Cambiar estado de pedido por vendedor
+    @PatchMapping("/cambiarEstado/{id}")
+    public ResponseEntity<String> cambiarEstadoPedido(
+            @PathVariable Long id,
+            @RequestBody CambioEstadoDTO dto
+    ) {
+        boolean actualizado = pedidoService.cambiarEstadoPedido(id, dto);
+        if (actualizado) {
+            return ResponseEntity.ok("Estado del pedido actualizado correctamente.");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se pudo actualizar el estado del pedido.");
+        }
+    }
 }
