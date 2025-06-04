@@ -1,19 +1,19 @@
 package cl.Ferramas.Ferramas.controller;
 
 import cl.Ferramas.Ferramas.dto.*;
-import cl.Ferramas.Ferramas.entity.Usuario;
 import cl.Ferramas.Ferramas.services.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.*;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/usuario")
@@ -28,7 +28,13 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<RegistroUsuarioDTO> registrarCliente(@Valid @RequestBody RegistroUsuarioDTO registroDTO) {
         RegistroUsuarioDTO usuarioregistrado = clienteService.registrarUsuario(registroDTO);
+        notificarCambioCache(); // Invalida caché en Express
         return new ResponseEntity<>(usuarioregistrado, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public List<UsuarioDTO> getAll() {
+        return clienteService.listarUsuarios();
     }
 
     @GetMapping("/{id}")
@@ -39,11 +45,6 @@ public class UsuarioController {
         } else {
             return ResponseEntity.notFound().build();
         }
-    }
-
-    @GetMapping
-    public List<UsuarioDTO> getAll() {
-        return clienteService.listarUsuarios();
     }
 
     @GetMapping("/usuarioporsucursal/{id}")
@@ -60,6 +61,7 @@ public class UsuarioController {
     public ResponseEntity<ClienteDTO> actualizarCliente(@PathVariable Long id, @RequestBody ClienteDTO clientedto) {
         ClienteDTO cliente = clienteService.actualizarCliente(id, clientedto);
         if (cliente != null) {
+            notificarCambioCache(); // Invalida caché en Express
             return ResponseEntity.ok(cliente);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -70,6 +72,7 @@ public class UsuarioController {
     public ResponseEntity<String> cambioPassword(@PathVariable Long id, @RequestBody CambioPasswordDTO cambiopassword) {
         Boolean cambio = clienteService.cambiarPassword(id, cambiopassword.getPasswordActual(), cambiopassword.getPasswordNueva());
         if (cambio) {
+            notificarCambioCache(); // Invalida caché en Express
             return ResponseEntity.ok("Contraseña actualizada correctamente.");
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -100,20 +103,33 @@ public class UsuarioController {
     public ResponseEntity<String> eliminarUsuario(@PathVariable Long id) {
         boolean eliminado = clienteService.eliminarUsuario(id);
         if (eliminado) {
+            notificarCambioCache(); // Invalida caché en Express
             return ResponseEntity.ok("Usuario eliminado correctamente.");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado.");
         }
     }
-    @GetMapping("/publico")
-    public ResponseEntity<String> accesoPublico() {
-        return ResponseEntity.ok("Esta ruta es pública y accesible para todos.");
-    }
 
-    @GetMapping("/admin/solo-admin")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> accesoSoloAdmin() {
-        return ResponseEntity.ok("Esta ruta es solo para usuarios con rol ADMIN.");
-    }
+    // Método auxiliar para notificar a Express y limpiar la caché
+    private void notificarCambioCache() {
+        String url = "http://localhost:3000/cache/clear/ruta";
 
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+
+            Map<String, String> body = new HashMap<>();
+            body.put("ruta", "/java-api/usuario");
+
+            HttpEntity<Map<String, String>> request = new HttpEntity<>(body, headers);
+            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+
+            System.out.println("Caché invalidado en Express: " + response.getBody());
+
+        } catch (Exception e) {
+            System.err.println("Error al notificar a Express para limpiar caché: " + e.getMessage());
+        }
+    }
 }

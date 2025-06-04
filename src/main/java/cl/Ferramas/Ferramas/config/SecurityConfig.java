@@ -31,7 +31,7 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 // Rutas públicas
-                .requestMatchers("/auth/login", "/usuario", "/usuario/publico", "/registro", "/public/**").permitAll()
+                .requestMatchers("/auth/login", "/usuario", "/registro", "/public/**").permitAll()
 
                 // Cliente
                 .requestMatchers(
