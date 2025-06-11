@@ -3,8 +3,6 @@ package cl.Ferramas.Ferramas.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import cl.Ferramas.Ferramas.entity.MetodoPago;
-
 public class PedidoDTO {
 
     private Long id;
@@ -24,13 +22,11 @@ public class PedidoDTO {
     private Long sucursalId;
     private Long tipoEntregaId;
     private String comprobanteUrl;
-    private MetodoPago metodoPago;
+    private Long metodoPago;
 
 
-    public PedidoDTO(Long id, String codigo,String estado,String tipoentrega, LocalDate fechaPedido, String direccionEntrega, BigDecimal subtotal, BigDecimal total, BigDecimal descuento, BigDecimal iva, String nota, Long estadoId, Long clienteId, Long vendedorId, Long sucursalId, Long tipoEntregaId, String comprobanteUrl) {
-        this.estado = estado;
+    public PedidoDTO(Long id, String codigo, LocalDate fechaPedido, String direccionEntrega, BigDecimal subtotal, BigDecimal total, BigDecimal descuento, BigDecimal iva, String nota, String estado, String tipoentrega, Long estadoId, Long clienteId, Long vendedorId, Long sucursalId, Long tipoEntregaId, String comprobanteUrl, Long metodoPago) {
         this.id = id;
-        this.tipoentrega= tipoentrega;
         this.codigo = codigo;
         this.fechaPedido = fechaPedido;
         this.direccionEntrega = direccionEntrega;
@@ -39,12 +35,15 @@ public class PedidoDTO {
         this.descuento = descuento;
         this.iva = iva;
         this.nota = nota;
+        this.estado = estado;
+        this.tipoentrega = tipoentrega;
         this.estadoId = estadoId;
         this.clienteId = clienteId;
         this.vendedorId = vendedorId;
         this.sucursalId = sucursalId;
         this.tipoEntregaId = tipoEntregaId;
         this.comprobanteUrl = comprobanteUrl;
+        this.metodoPago = metodoPago;
     }
 
     public String getTipoentrega() {
@@ -186,12 +185,11 @@ public class PedidoDTO {
         this.comprobanteUrl = comprobanteUrl;
     }
 
-    public MetodoPago getMetodoPago() {
+    public Long getMetodoPago() {
         return metodoPago;
     }
 
-    public void setMetodoPago(MetodoPago metodoPago) {
+    public void setMetodoPago(Long metodoPago) {
         this.metodoPago = metodoPago;
     }
-
 }

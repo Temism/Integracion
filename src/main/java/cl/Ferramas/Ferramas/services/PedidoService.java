@@ -36,6 +36,8 @@ public class PedidoService {
     private SucursalRep sucursalRep;
     @Autowired
     private HistorialEstadoPedidoRep historialEstadoPedidoRep;
+    @Autowired
+    private MetodoPagoRep metodoPagoRep;
 
     @Transactional
     public List<PedidoDTO> listarpedidos() {
@@ -69,6 +71,9 @@ public class PedidoService {
 
         Sucursal sucursal = sucursalRep.findById(pedido.getSucursal().getSucursalId()).orElseThrow(() -> new RuntimeException("Sucursal no encontrada"));
         pedido.setSucursal(sucursal);
+
+        MetodoPago metodoPago = metodoPagoRep.findById(pedido.getMetodoPago().getMetodoId()).orElseThrow(() -> new RuntimeException("Metodo de pago no encontrado"));
+        pedido.setMetodoPago(metodoPago);
 
         pedido = pedidoRep.save(pedido);
         return pedidoMapper.toDTO(pedido);

@@ -28,42 +28,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                // Rutas públicas
-                .requestMatchers("/auth/login", "/usuario", "/usuario/publico", "/registro", "/public/**").permitAll()
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        // Rutas públicas
+                        .requestMatchers("/auth/login", "/usuario", "/usuario/publico", "/registro", "/public/**").permitAll()
 
-                // Cliente
-                .requestMatchers(
-                    "/cliente/**", "/catalogo/**", "/producto/**", "/carrito/**", "/compra/**",
-                    "/pedido", "/pedido/**", "/pago", "/pago/**", "/detallepedido/**"
-                ).hasAnyRole("CLIENTE", "ADMIN")
+                        // Cliente y Admin
+                        .requestMatchers("/cliente/**", "/catalogo/**", "/carrito/**", "/compra/**", "/pago", "/pago/**").hasAnyRole("CLIENTE", "ADMIN")
 
-                // Vendedor
-                .requestMatchers(
-                    "/pedido/**", "/detallepedido/**", "/producto/**", "/usuario/usuarioporrol/**",
-                    "/usuario/usuarioporsucursal/**", "/usuario", "/usuario/**"
-                ).hasAnyRole("VENDEDOR", "ADMIN")
+                        // Cliente, Vendedor, Bodeguero y Admin
+                        .requestMatchers("/producto/**").hasAnyRole("CLIENTE", "VENDEDOR", "BODEGUERO", "ADMIN")
 
-                // Bodeguero
-                .requestMatchers(
-                    "/inventario/**", "/movimientoinventario/**", "/producto/**", "/marca/**",
-                    "/categoria/**", "/tipomov/**"
-                ).hasAnyRole("BODEGUERO", "ADMIN")
+                        // Cliente, Vendedor y Admin
+                        .requestMatchers("/pedido", "/pedido/**", "/detallepedido/**").hasAnyRole("CLIENTE", "VENDEDOR", "ADMIN")
 
-                // Despachador
-                .requestMatchers(
-                    "/despacho/**", "/estadodespacho/**"
-                ).hasAnyRole("DESPACHADOR", "ADMIN")
+                        // Vendedor y Admin
+                        .requestMatchers("/usuario/usuarioporrol/**", "/usuario/usuarioporsucursal/**", "/usuario", "/usuario/**").hasAnyRole("VENDEDOR", "ADMIN")
 
-                // Reportes solo para Admin
-                .requestMatchers("/reporte/**").hasRole("ADMIN")
+                        // Bodeguero y Admin
+                        .requestMatchers("/inventario/**", "/movimientoinventario/**", "/marca/**", "/categoria/**", "/tipomov/**").hasAnyRole("BODEGUERO", "ADMIN")
 
-                // Todo lo demás requiere autenticación
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-            .logout(logout -> logout.permitAll());
+                        // Despachador y Admin
+                        .requestMatchers("/despacho/**", "/estadodespacho/**").hasAnyRole("DESPACHADOR", "ADMIN")
+
+                        // Solo Admin
+                        .requestMatchers("/reporte/**").hasRole("ADMIN")
+
+                        // Todo lo demás requiere autenticación
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                .logout(logout -> logout.permitAll());
 
         return http.build();
     }

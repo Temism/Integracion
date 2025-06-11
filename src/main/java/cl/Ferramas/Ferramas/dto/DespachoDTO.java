@@ -3,31 +3,31 @@ package cl.Ferramas.Ferramas.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class DespachoDTO {
+    public class DespachoDTO {
 
-    private Long Id;
-    private LocalDate fechaDespacho;
-    private LocalDate fechaEntregaEstimada;
-    private LocalDate fechaEntregaReal;
-    private String numeroGuia;
-    private String Transportista;
-    private Long estadiId;
-    private Long pedidoId;
-    private BigDecimal costoDespacho;
-    private String estado;
+        private Long Id;
+        private LocalDate fechaDespacho;
+        private LocalDate fechaEntregaEstimada;
+        private LocalDate fechaEntregaReal;
+        private String numeroGuia;
+        private String Transportista;
+        private Long estadiId;
+        private Long pedidoId;
+        private BigDecimal costoDespacho;
+        private String estado;
 
 
-    public DespachoDTO(Long id, LocalDate fechaDespacho,String estado, LocalDate fechaEntregaEstimada, LocalDate fechaEntregaReal, String numeroGuia, String transportista, Long estadiId, Long pedidoId, BigDecimal costoDespacho) {
-        Id = id;
-        this.fechaDespacho = fechaDespacho;
-        this.fechaEntregaEstimada = fechaEntregaEstimada;
-        this.fechaEntregaReal = fechaEntregaReal;
-        this.numeroGuia = numeroGuia;
-        Transportista = transportista;
-        this.estadiId = estadiId;
-        this.pedidoId = pedidoId;
-        this.costoDespacho = costoDespacho;
-    }
+        public DespachoDTO(Long id, LocalDate fechaDespacho,String estado, LocalDate fechaEntregaEstimada, LocalDate fechaEntregaReal, String numeroGuia, String transportista, Long estadiId, Long pedidoId, BigDecimal costoDespacho) {
+            Id = id;
+            this.fechaDespacho = fechaDespacho;
+            this.fechaEntregaEstimada = fechaEntregaEstimada;
+            this.fechaEntregaReal = fechaEntregaReal;
+            this.numeroGuia = numeroGuia;
+            Transportista = transportista;
+            this.estadiId = estadiId;
+            this.pedidoId = pedidoId;
+            this.costoDespacho = costoDespacho;
+        }
 
     public String getEstado() {
         return estado;

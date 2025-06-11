@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -33,9 +34,13 @@ public class InventarioService {
     private SucursalRep sucursalRep;
 
 
-    public List<Inventario> listarInventario(){
-        return inventarioRep.findAll();
+    public List<InventarioDTO> listarInventario() {
+        List<Inventario> inventarios = inventarioRep.findAll();
+        return inventarios.stream()
+                .map(inventarioMapper::toDTO)
+                .collect(Collectors.toList());
     }
+
 
     @Transactional
     public InventarioDTO buscarInventarioporId(Long id){

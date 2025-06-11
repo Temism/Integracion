@@ -1,7 +1,7 @@
 package cl.Ferramas.Ferramas.mapper;
 
 import cl.Ferramas.Ferramas.dto.PedidoDTO;
-import cl.Ferramas.Ferramas.entity.Pedido;
+import cl.Ferramas.Ferramas.entity.*;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,16 +22,22 @@ public class PedidoMapper {
         dto.setDescuento(pedido.getDescuento());
         dto.setIva(pedido.getIva());
         dto.setNota(pedido.getNotas());
-        dto.setEstado(pedido.getEstado().getNombre());
-        dto.setTipoentrega(pedido.getTipoEntrega().getNombre());
         dto.setComprobanteUrl(pedido.getComprobanteUrl());
-        dto.setMetodoPago(pedido.getMetodoPago());
 
+        // ✅ Mapeo seguro con verificación de nulls
+        dto.setEstado(pedido.getEstado() != null ? pedido.getEstado().getNombre() : null);
+        dto.setTipoentrega(pedido.getTipoEntrega() != null ? pedido.getTipoEntrega().getNombre() : null);
 
+        // ✅ Mapeo de IDs de entidades relacionadas
+        dto.setEstadoId(pedido.getEstado() != null ? pedido.getEstado().getEstadoPedidoId() : null);
+        dto.setClienteId(pedido.getCliente() != null ? pedido.getCliente().getUsuarioId() : null);
+        dto.setVendedorId(pedido.getVendedor() != null ? pedido.getVendedor().getUsuarioId() : null);
+        dto.setSucursalId(pedido.getSucursal() != null ? pedido.getSucursal().getSucursalId() : null);
+        dto.setTipoEntregaId(pedido.getTipoEntrega() != null ? pedido.getTipoEntrega().getTipoEntregaId() : null);
+        dto.setMetodoPago(pedido.getMetodoPago() != null ? pedido.getMetodoPago().getMetodoId() : null);
 
         return dto;
     }
-
 
     public Pedido toEntity(PedidoDTO dto) {
         if (dto == null) {
@@ -49,13 +55,44 @@ public class PedidoMapper {
         pedido.setIva(dto.getIva());
         pedido.setNotas(dto.getNota());
         pedido.setComprobanteUrl(dto.getComprobanteUrl());
-        pedido.setMetodoPago(dto.getMetodoPago());
 
+        // ✅ Crear entidades relacionadas con solo el ID (serán completadas en el servicio)
+        if (dto.getClienteId() != null) {
+            Usuario cliente = new Usuario();
+            cliente.setUsuarioId(dto.getClienteId());
+            pedido.setCliente(cliente);
+        }
 
+        if (dto.getVendedorId() != null) {
+            Usuario vendedor = new Usuario();
+            vendedor.setUsuarioId(dto.getVendedorId());
+            pedido.setVendedor(vendedor);
+        }
 
+        if (dto.getEstadoId() != null) {
+            EstadoPedido estado = new EstadoPedido();
+            estado.setEstadoPedidoId(dto.getEstadoId());
+            pedido.setEstado(estado);
+        }
+
+        if (dto.getTipoEntregaId() != null) {
+            TipoEntrega tipoEntrega = new TipoEntrega();
+            tipoEntrega.setTipoEntregaId(dto.getTipoEntregaId());
+            pedido.setTipoEntrega(tipoEntrega);
+        }
+
+        if (dto.getSucursalId() != null) {
+            Sucursal sucursal = new Sucursal();
+            sucursal.setSucursalId(dto.getSucursalId());
+            pedido.setSucursal(sucursal);
+        }
+
+        if (dto.getMetodoPago() != null) {
+            MetodoPago metodoPago = new MetodoPago();
+            metodoPago.setMetodoId(dto.getMetodoPago());
+            pedido.setMetodoPago(metodoPago);
+        }
 
         return pedido;
     }
-
-
 }

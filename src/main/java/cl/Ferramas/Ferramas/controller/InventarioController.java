@@ -24,7 +24,7 @@ public class InventarioController {
     private InventarioService inventarioService;
 
     @GetMapping
-    public List<Inventario> getAll() {
+    public List<InventarioDTO> getAll() {
         return inventarioService.listarInventario();
     }
 
