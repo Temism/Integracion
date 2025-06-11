@@ -28,10 +28,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+<<<<<<< HEAD
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Rutas públicas
                         .requestMatchers("/auth/login", "/usuario", "/usuario/publico", "/registro", "/public/**").permitAll()
+=======
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                // Rutas públicas
+                .requestMatchers("/auth/login", "/usuario", "/registro", "/public/**").permitAll()
+>>>>>>> b9d1bc374d63426053770a329cbd726bf2d9ee49
 
                         // Cliente y Admin
                         .requestMatchers("/cliente/**", "/catalogo/**", "/carrito/**", "/compra/**", "/pago", "/pago/**").hasAnyRole("CLIENTE", "ADMIN")
