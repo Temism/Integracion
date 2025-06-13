@@ -43,7 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/pedido", "/pedido/**", "/detallepedido/**").hasAnyRole("CLIENTE", "VENDEDOR", "ADMIN")
 
                         // Vendedor y Admin
-                        .requestMatchers("/usuario/usuarioporrol/**", "/usuario/usuarioporsucursal/**", "/usuario", "/usuario/**").hasAnyRole("VENDEDOR", "ADMIN")
+                        .requestMatchers("/usuario/usuarioporrol/**", "/usuario/usuarioporsucursal/**", "/usuario", "/usuario/**", "/historialprecio/**").hasAnyRole("VENDEDOR", "ADMIN")
 
                         // Bodeguero y Admin
                         .requestMatchers("/inventario/**", "/movimientoinventario/**", "/marca/**", "/categoria/**", "/tipomov/**").hasAnyRole("BODEGUERO", "ADMIN")

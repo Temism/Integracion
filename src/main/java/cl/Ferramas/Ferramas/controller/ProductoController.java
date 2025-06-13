@@ -43,14 +43,9 @@ public class ProductoController {
         return productoService.listarProductos();
     }
 
-<<<<<<< HEAD
     @PatchMapping("/{id}")
     public ResponseEntity<RegistroProductoDTO> actualizarproducto(@PathVariable Long id, @RequestBody RegistroProductoDTO productoDTO){
 
-=======
-    @PatchMapping("/actualizarproducto/{id}")
-    public ResponseEntity<RegistroProductoDTO> actualizarproducto(@PathVariable Long id, @RequestBody RegistroProductoDTO productoDTO) {
->>>>>>> b9d1bc374d63426053770a329cbd726bf2d9ee49
         RegistroProductoDTO producto = productoService.actualizarProducto(id, productoDTO);
 
         if (producto != null) {

@@ -1,10 +1,6 @@
 package cl.Ferramas.Ferramas.controller;
 
 import cl.Ferramas.Ferramas.dto.*;
-<<<<<<< HEAD
-
-=======
->>>>>>> b9d1bc374d63426053770a329cbd726bf2d9ee49
 import cl.Ferramas.Ferramas.services.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
