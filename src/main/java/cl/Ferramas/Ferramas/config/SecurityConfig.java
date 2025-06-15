@@ -31,13 +31,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Rutas públicas
-                        .requestMatchers("/auth/login", "/usuario", "/usuario/publico", "/registro", "/public/**").permitAll()
+                        .requestMatchers("/auth/login", "/usuario", "/usuario/publico", "/registro", "/public/**", "/producto/**", "/categoria/**").permitAll()
 
                         // Cliente y Admin
                         .requestMatchers("/cliente/**", "/catalogo/**", "/carrito/**", "/compra/**", "/pago", "/pago/**").hasAnyRole("CLIENTE", "ADMIN")
-
-                        // Cliente, Vendedor, Bodeguero y Admin
-                        .requestMatchers("/producto/**").hasAnyRole("CLIENTE", "VENDEDOR", "BODEGUERO", "ADMIN")
 
                         // Cliente, Vendedor y Admin
                         .requestMatchers("/pedido", "/pedido/**", "/detallepedido/**").hasAnyRole("CLIENTE", "VENDEDOR", "ADMIN")
@@ -46,7 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/usuario/usuarioporrol/**", "/usuario/usuarioporsucursal/**", "/usuario", "/usuario/**", "/historialprecio/**").hasAnyRole("VENDEDOR", "ADMIN")
 
                         // Bodeguero y Admin
-                        .requestMatchers("/inventario/**", "/movimientoinventario/**", "/marca/**", "/categoria/**", "/tipomov/**").hasAnyRole("BODEGUERO", "ADMIN")
+                        .requestMatchers("/inventario/**", "/movimientoinventario/**", "/marca/**", "/tipomov/**").hasAnyRole("BODEGUERO", "ADMIN")
 
                         // Despachador y Admin
                         .requestMatchers("/despacho/**", "/estadodespacho/**").hasAnyRole("DESPACHADOR", "ADMIN")

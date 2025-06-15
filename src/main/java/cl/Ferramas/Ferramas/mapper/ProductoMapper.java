@@ -78,6 +78,7 @@ public class ProductoMapper {
         productoDTO.setPrecioActual(producto.getPrecioActual());
         productoDTO.setFechaCreacion(producto.getFechaCreacion());
         productoDTO.setFechaActualizacion(producto.getFechaActualizacion());
+        productoDTO.setImagenUrl(producto.getImagenUrl());
 
 
 

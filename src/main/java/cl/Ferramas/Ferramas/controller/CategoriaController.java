@@ -1,15 +1,16 @@
 package cl.Ferramas.Ferramas.controller;
 
+import cl.Ferramas.Ferramas.dto.CategoriaDTO;
 import cl.Ferramas.Ferramas.entity.Categoria;
+import cl.Ferramas.Ferramas.mapper.CategoriaMapper;
 import cl.Ferramas.Ferramas.services.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/categoria")
@@ -19,33 +20,36 @@ public class CategoriaController {
     private CategoriaService categoriaService;
 
     @GetMapping
-    public List<Categoria> getAll() {
-        return categoriaService.listarCategorias();
+    public List<CategoriaDTO> getAll() {
+        return categoriaService.listarCategorias()
+                .stream()
+                .map(CategoriaMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Categoria> getById(@PathVariable Long id) {
+    public ResponseEntity<CategoriaDTO> getById(@PathVariable Long id) {
         return categoriaService.buscarCategoriaPorId(id)
-                .map(ResponseEntity::ok)
+                .map(categoria -> ResponseEntity.ok(CategoriaMapper.toDTO(categoria)))
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Categoria create(@RequestBody Categoria categoria) {
-        Categoria nueva = categoriaService.guardarCategoria(categoria);
+    public CategoriaDTO create(@RequestBody CategoriaDTO categoriaDTO) {
+        Categoria nueva = categoriaService.guardarCategoria(CategoriaMapper.toEntity(categoriaDTO));
         notificarCambioCache(); // Invalida caché en Express
-        return nueva;
+        return CategoriaMapper.toDTO(nueva);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Categoria> update(@PathVariable Long id, @RequestBody Categoria updated) {
+    public ResponseEntity<CategoriaDTO> update(@PathVariable Long id, @RequestBody CategoriaDTO categoriaDTO) {
         return categoriaService.buscarCategoriaPorId(id)
                 .map(existing -> {
-                    existing.setNombre(updated.getNombre());
-                    existing.setDescripcion(updated.getDescripcion());
+                    existing.setNombre(categoriaDTO.getNombre());
+                    existing.setDescripcion(categoriaDTO.getDescripcion());
                     Categoria actualizada = categoriaService.guardarCategoria(existing);
                     notificarCambioCache(); // Invalida caché en Express
-                    return ResponseEntity.ok(actualizada);
+                    return ResponseEntity.ok(CategoriaMapper.toDTO(actualizada));
                 }).orElse(ResponseEntity.notFound().build());
     }
 
@@ -60,7 +64,6 @@ public class CategoriaController {
         }
     }
 
-    // Método auxiliar para notificar a Express y limpiar la caché
     private void notificarCambioCache() {
         String url = "http://localhost:3000/cache/clear/ruta";
 

@@ -145,15 +145,16 @@ INSERT INTO usuario (nombre, apellidop, apellidom, email, telefono, direccion, f
 
 
 -- Tabla producto
-INSERT INTO producto (nombre, descripcion, codigo, activo, precio_actual, costo, fecha_creacion, fecha_actualizacion, garantia_meses, categoria_id, marca_id) VALUES 
-('Taladro Percutor 800W', 'Taladro percutor profesional 800W con maletín', 'BOSCH-TP800', TRUE, 69990, 45000, '2024-10-01', '2025-04-15', 24, 2, 1),
-('Set Destornilladores 10 piezas', 'Set destornilladores planos y phillips', 'STAN-SD10', TRUE, 19990, 10000, '2024-09-15', '2025-04-10', 12, 1, 2),
-('Martillo Carpintero 20oz', 'Martillo de acero con mango ergonómico', 'TRAM-MC20', TRUE, 8990, 4500, '2024-08-10', '2025-03-20', 6, 1, 3),
-('Impermeabilizante 5kg', 'Impermeabilizante para muros y techos', 'SIKA-IM5', TRUE, 24990, 15000, '2024-07-05', '2025-02-15', 0, 3, 4),
-('Semillas Césped 1kg', 'Semillas de césped para jardín', 'ANAS-SC1', TRUE, 7990, 4000, '2024-06-20', '2025-01-10', 0, 7, 5),
-('Pintura Látex 20L Blanco', 'Pintura látex lavable interior/exterior', 'SHERW-PL20B', TRUE, 49990, 32000, '2024-05-15', '2025-04-01', 0, 5, 6),
-('Set Tornillos Madera 500u', 'Set de tornillos para madera variados', 'WRTH-TM500', TRUE, 15990, 8000, '2024-04-10', '2025-03-15', 0, 4, 7),
-('Sierra Circular 1500W', 'Sierra circular profesional con disco', 'MAK-SC1500', TRUE, 89990, 60000, '2024-03-05', '2025-02-20', 12, 2, 8);
+INSERT INTO producto (
+  nombre, descripcion, codigo, activo, precio_actual, costo, fecha_creacion, fecha_actualizacion, garantia_meses, categoria_id, marca_id, imagen_url) VALUES 
+('Taladro Percutor 800W', 'Taladro percutor profesional 800W con maletín', 'BOSCH-TP800', TRUE, 69990, 45000, '2024-10-01', '2025-04-15', 24, 2, 1, 'assets/images/taladro.jpg'),
+('Set Destornilladores 10 piezas', 'Set destornilladores planos y phillips', 'STAN-SD10', TRUE, 19990, 10000, '2024-09-15', '2025-04-10', 12, 1, 2, 'assets/images/cat-herramientas.jpg'),
+('Martillo Carpintero 20oz', 'Martillo de acero con mango ergonómico', 'TRAM-MC20', TRUE, 8990, 4500, '2024-08-10', '2025-03-20', 6, 1, 3, 'assets/images/martillo.png'),
+('Impermeabilizante 5kg', 'Impermeabilizante para muros y techos', 'SIKA-IM5', TRUE, 24990, 15000, '2024-07-05', '2025-02-15', 0, 3, 4, 'assets/images/cemento.jpg'),
+('Semillas Césped 1kg', 'Semillas de césped para jardín', 'ANAS-SC1', TRUE, 7990, 4000, '2024-06-20', '2025-01-10', 0, 7, 5, 'assets/images/cat-materiales.jpg'),
+('Pintura Látex 20L Blanco', 'Pintura látex lavable interior/exterior', 'SHERW-PL20B', TRUE, 49990, 32000, '2024-05-15', '2025-04-01', 0, 5, 6, 'assets/images/cat-pinturas.jpg'),
+('Set Tornillos Madera 500u', 'Set de tornillos para madera variados', 'WRTH-TM500', TRUE, 15990, 8000, '2024-04-10', '2025-03-15', 0, 4, 7, 'assets/images/cat-tornillos.jpg'),
+('Sierra Circular 1500W', 'Sierra circular profesional con disco', 'MAK-SC1500', TRUE, 89990, 60000, '2024-03-05', '2025-02-20', 12, 2, 8, 'assets/images/cat-herramientas.jpg');
 
 -- INVENTARIO
 

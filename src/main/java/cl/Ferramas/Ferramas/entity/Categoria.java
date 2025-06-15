@@ -13,6 +13,7 @@ import java.util.Set;
 @Entity
 @Table(name = "categoria")
 public class Categoria {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoriaId;
@@ -22,17 +23,16 @@ public class Categoria {
 
     private String descripcion;
 
-    @OneToMany(mappedBy = "categoria")
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
     private List<Producto> productos = new ArrayList<>();
+
+    public Categoria() {}
 
     public Categoria(Long categoriaId, String nombre, String descripcion, List<Producto> productos) {
         this.categoriaId = categoriaId;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.productos = productos;
-    }
-
-    public Categoria() {
     }
 
     public Long getCategoriaId() {

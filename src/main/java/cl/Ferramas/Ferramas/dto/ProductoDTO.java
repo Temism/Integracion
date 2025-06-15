@@ -19,6 +19,7 @@ public class ProductoDTO {
     private Boolean activo;
     private LocalDate fechaCreacion;
     private LocalDate fechaActualizacion;
+    private String imagenUrl;
 
 
     public ProductoDTO(Long id,String codigo, String nombre, String descripcion, String marca, String categoria, BigDecimal precioActual, BigDecimal costo, Integer garantiaMeses, Boolean activo, LocalDate fechaCreacion, LocalDate fechaActualizacion) {
@@ -134,5 +135,13 @@ public class ProductoDTO {
 
     public void setFechaActualizacion(LocalDate fechaActualizacion) {
         this.fechaActualizacion = fechaActualizacion;
+    }
+
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
+
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
     }
 }
