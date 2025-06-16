@@ -24,11 +24,11 @@ public class PedidoMapper {
         dto.setNota(pedido.getNotas());
         dto.setComprobanteUrl(pedido.getComprobanteUrl());
 
-        // ✅ Mapeo seguro con verificación de nulls
+
         dto.setEstado(pedido.getEstado() != null ? pedido.getEstado().getNombre() : null);
         dto.setTipoentrega(pedido.getTipoEntrega() != null ? pedido.getTipoEntrega().getNombre() : null);
 
-        // ✅ Mapeo de IDs de entidades relacionadas
+
         dto.setEstadoId(pedido.getEstado() != null ? pedido.getEstado().getEstadoPedidoId() : null);
         dto.setClienteId(pedido.getCliente() != null ? pedido.getCliente().getUsuarioId() : null);
         dto.setVendedorId(pedido.getVendedor() != null ? pedido.getVendedor().getUsuarioId() : null);
@@ -56,7 +56,7 @@ public class PedidoMapper {
         pedido.setNotas(dto.getNota());
         pedido.setComprobanteUrl(dto.getComprobanteUrl());
 
-        // ✅ Crear entidades relacionadas con solo el ID (serán completadas en el servicio)
+
         if (dto.getClienteId() != null) {
             Usuario cliente = new Usuario();
             cliente.setUsuarioId(dto.getClienteId());
