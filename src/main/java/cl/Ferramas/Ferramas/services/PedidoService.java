@@ -2,8 +2,6 @@ package cl.Ferramas.Ferramas.services;
 
 import cl.Ferramas.Ferramas.dto.CambioEstadoDTO;
 import cl.Ferramas.Ferramas.dto.PedidoDTO;
-import cl.Ferramas.Ferramas.dto.ProductoDTO;
-import cl.Ferramas.Ferramas.dto.RegistroProductoDTO;
 import cl.Ferramas.Ferramas.entity.*;
 import cl.Ferramas.Ferramas.exception.ExceptionClasses;
 import cl.Ferramas.Ferramas.mapper.PedidoMapper;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,22 +54,28 @@ public class PedidoService {
     public PedidoDTO registrarPedido(PedidoDTO pedidoDTO) {
         Pedido pedido = pedidoMapper.toEntity(pedidoDTO);
 
-        Usuario cliente = usuarioRep.findById(pedido.getCliente().getUsuarioId()).orElseThrow(() -> new RuntimeException("Cliente no encontrada"));
+        Usuario cliente = usuarioRep.findById(pedidoDTO.getClienteId())
+                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
         pedido.setCliente(cliente);
 
-        EstadoPedido estado = estadoPedidoRep.findById(pedido.getEstado().getEstadoPedidoId()).orElseThrow(() -> new RuntimeException("estado no encontrada"));
-        pedido.setEstado(estado);
-
-        Usuario vendedor = usuarioRep.findById(pedido.getVendedor().getUsuarioId()).orElseThrow(() -> new RuntimeException("Vendedor no encontrada"));
+        Usuario vendedor = usuarioRep.findById(pedidoDTO.getVendedorId())
+                .orElseThrow(() -> new RuntimeException("Vendedor no encontrado"));
         pedido.setVendedor(vendedor);
 
-        TipoEntrega tipoEntrega = tipoEntregaRep.findById(pedido.getTipoEntrega().getTipoEntregaId()).orElseThrow(() -> new RuntimeException("tipo de entrega no encontrada"));
+        EstadoPedido estado = estadoPedidoRep.findById(pedidoDTO.getEstadoId())
+                .orElseThrow(() -> new RuntimeException("Estado no encontrado"));
+        pedido.setEstado(estado);
+
+        TipoEntrega tipoEntrega = tipoEntregaRep.findById(pedidoDTO.getTipoEntregaId())
+                .orElseThrow(() -> new RuntimeException("Tipo de entrega no encontrado"));
         pedido.setTipoEntrega(tipoEntrega);
 
-        Sucursal sucursal = sucursalRep.findById(pedido.getSucursal().getSucursalId()).orElseThrow(() -> new RuntimeException("Sucursal no encontrada"));
+        Sucursal sucursal = sucursalRep.findById(pedidoDTO.getSucursalId())
+                .orElseThrow(() -> new RuntimeException("Sucursal no encontrada"));
         pedido.setSucursal(sucursal);
 
-        MetodoPago metodoPago = metodoPagoRep.findById(pedido.getMetodoPago().getMetodoId()).orElseThrow(() -> new RuntimeException("Metodo de pago no encontrado"));
+        MetodoPago metodoPago = metodoPagoRep.findById(pedidoDTO.getMetodoPago())
+                .orElseThrow(() -> new RuntimeException("Método de pago no encontrado"));
         pedido.setMetodoPago(metodoPago);
 
         pedido = pedidoRep.save(pedido);
@@ -87,7 +90,6 @@ public class PedidoService {
         pedidoRep.save(pedido);
     }
 
-    // ✅ NUEVO: Cambiar estado del pedido y registrar en historial
     @Transactional
     public boolean cambiarEstadoPedido(Long pedidoId, CambioEstadoDTO dto) {
         Optional<Pedido> optionalPedido = pedidoRep.findById(pedidoId);
@@ -101,11 +103,9 @@ public class PedidoService {
         Usuario usuario = usuarioRep.findById(dto.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Actualiza el pedido
         pedido.setEstado(nuevoEstado);
         pedidoRep.save(pedido);
 
-        // Registra en el historial
         HistorialEstadoPedido historial = new HistorialEstadoPedido();
         historial.setPedido(pedido);
         historial.setEstadoAnterior(estadoAnterior);

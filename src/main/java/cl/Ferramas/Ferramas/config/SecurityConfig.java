@@ -31,13 +31,13 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Rutas públicas
-                        .requestMatchers("/auth/login", "/usuario", "/registro", "/public/**", "/producto/**", "/categoria/**", "/region/**").permitAll()
+                        .requestMatchers("/auth/login", "/usuario", "/registro", "/public/**", "/producto/**", "/categoria/**", "/region/**", "/pedido").permitAll()
 
                         // Cliente y Admin
                         .requestMatchers("/cliente/**", "/catalogo/**", "/carrito/**", "/compra/**", "/pago", "/pago/**").hasAnyRole("CLIENTE", "ADMIN")
 
                         // Cliente, Vendedor y Admin
-                        .requestMatchers("/pedido", "/pedido/**", "/detallepedido/**").hasAnyRole("CLIENTE", "VENDEDOR", "ADMIN")
+                        .requestMatchers( "/pedido/**", "/detallepedido/**").hasAnyRole("CLIENTE", "VENDEDOR", "ADMIN")
 
                         // Vendedor y Admin
                         .requestMatchers("/usuario/usuarioporrol/**", "/usuario/usuarioporsucursal/**", "/usuario/**", "/historialprecio/**").hasAnyRole("VENDEDOR", "ADMIN")
