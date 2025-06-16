@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Rutas públicas
-                        .requestMatchers("/auth/login", "/usuario", "/usuario/publico", "/registro", "/public/**", "/producto/**", "/categoria/**").permitAll()
+                        .requestMatchers("/auth/login", "/usuario/**", "/usuario/publico", "/registro", "/public/**", "/producto/**", "/categoria/**", "/region/**").permitAll()
 
                         // Cliente y Admin
                         .requestMatchers("/cliente/**", "/catalogo/**", "/carrito/**", "/compra/**", "/pago", "/pago/**").hasAnyRole("CLIENTE", "ADMIN")
