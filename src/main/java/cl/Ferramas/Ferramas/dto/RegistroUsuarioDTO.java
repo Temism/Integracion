@@ -5,6 +5,9 @@ import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 
 public class RegistroUsuarioDTO {
+
+    private Long id;
+
     @NotBlank(message = "El nombre es obligatorio")
     @Size(min = 3, max = 50, message = "El nombre debe tener entre 3 y 50 caracteres")
     private String nombre;
@@ -34,9 +37,7 @@ public class RegistroUsuarioDTO {
     @Past(message = "La fecha de nacimiento debe ser anterior a la fecha actual")
     private LocalDate fechaNacimiento;
 
-
     private LocalDate fechaRegistro;
-
     private LocalDate ultimoLogin;
 
     @NotBlank(message = "El RUT es obligatorio")
@@ -49,9 +50,10 @@ public class RegistroUsuarioDTO {
     @NotNull(message = "El rol no puede ser nulo")
     private Long rol;
 
-    @NotNull(message = "El rol no puede ser nulo")
+    @NotNull(message = "La sucursal no puede ser nula")
     private Long sucursal;
 
+    public RegistroUsuarioDTO() {}
 
     public RegistroUsuarioDTO(String nombre, String apellidop, String apellidom, String email, String password, String direccion, String telefono, LocalDate fechaNacimiento, LocalDate fechaRegistro, LocalDate ultimoLogin, String rut, Long comuna, Long rol, Long sucursal) {
         this.nombre = nombre;
@@ -70,7 +72,12 @@ public class RegistroUsuarioDTO {
         this.sucursal = sucursal;
     }
 
-    public RegistroUsuarioDTO() {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public @NotNull(message = "La sucursal no puede ser nula") Long getSucursal() {

@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Rutas públicas
-                        .requestMatchers("/auth/login", "/usuario/**", "/usuario/publico", "/registro", "/public/**", "/producto/**", "/categoria/**", "/region/**").permitAll()
+                        .requestMatchers("/auth/login", "/usuario", "/registro", "/public/**", "/producto/**", "/categoria/**", "/region/**").permitAll()
 
                         // Cliente y Admin
                         .requestMatchers("/cliente/**", "/catalogo/**", "/carrito/**", "/compra/**", "/pago", "/pago/**").hasAnyRole("CLIENTE", "ADMIN")
@@ -40,7 +40,7 @@ public class SecurityConfig {
                         .requestMatchers("/pedido", "/pedido/**", "/detallepedido/**").hasAnyRole("CLIENTE", "VENDEDOR", "ADMIN")
 
                         // Vendedor y Admin
-                        .requestMatchers("/usuario/usuarioporrol/**", "/usuario/usuarioporsucursal/**", "/usuario", "/usuario/**", "/historialprecio/**").hasAnyRole("VENDEDOR", "ADMIN")
+                        .requestMatchers("/usuario/usuarioporrol/**", "/usuario/usuarioporsucursal/**", "/usuario/**", "/historialprecio/**").hasAnyRole("VENDEDOR", "ADMIN")
 
                         // Bodeguero y Admin
                         .requestMatchers("/inventario/**", "/movimientoinventario/**", "/marca/**", "/tipomov/**").hasAnyRole("BODEGUERO", "ADMIN")

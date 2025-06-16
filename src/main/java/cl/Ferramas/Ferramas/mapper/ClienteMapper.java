@@ -1,7 +1,6 @@
 package cl.Ferramas.Ferramas.mapper;
 
 import cl.Ferramas.Ferramas.dto.ClienteDTO;
-
 import cl.Ferramas.Ferramas.dto.RegistroClienteDTO;
 import cl.Ferramas.Ferramas.dto.RegistroUsuarioDTO;
 import cl.Ferramas.Ferramas.dto.UsuarioDTO;
@@ -40,6 +39,7 @@ public class ClienteMapper {
         }
 
         RegistroClienteDTO responseDTO = new RegistroClienteDTO();
+        responseDTO.setId(usuario.getUsuarioId()); // <- ID agregado
         responseDTO.setNombre(usuario.getNombre());
         responseDTO.setApellidop(usuario.getApellidop());
         responseDTO.setApellidom(usuario.getApellidom());
@@ -49,14 +49,10 @@ public class ClienteMapper {
         responseDTO.setFechaRegistro(usuario.getFechaRegistro());
         responseDTO.setComuna(usuario.getComuna().getId());
 
-
-
         return responseDTO;
     }
 
-
-    // registro usuarios(bodeguero,vendedor,etc)
-
+    // registro usuarios (bodeguero, vendedor, etc.)
     public Usuario usuarioregistrodtoToUsuario(RegistroUsuarioDTO registroDTO) {
         if (registroDTO == null) {
             return null;
@@ -83,6 +79,7 @@ public class ClienteMapper {
         }
 
         RegistroUsuarioDTO responseDTO = new RegistroUsuarioDTO();
+        responseDTO.setId(usuario.getUsuarioId()); // <- ID agregado
         responseDTO.setNombre(usuario.getNombre());
         responseDTO.setApellidop(usuario.getApellidop());
         responseDTO.setApellidom(usuario.getApellidom());
@@ -93,7 +90,6 @@ public class ClienteMapper {
 
         return responseDTO;
     }
-
 
     // cliente a usuario
     public ClienteDTO usuarioToClienteDto(Usuario usuario) {
@@ -117,7 +113,6 @@ public class ClienteMapper {
 
         return clienteDTO;
     }
-
 
     public UsuarioDTO usuarioToUsuarioDto(Usuario usuario) {
         if (usuario == null) {

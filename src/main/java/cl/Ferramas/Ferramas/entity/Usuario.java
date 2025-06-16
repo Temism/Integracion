@@ -1,5 +1,6 @@
 package cl.Ferramas.Ferramas.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,24 +18,36 @@ public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long usuarioId;
+
     @Column(nullable = false)
     private String email;
+
     @Column(nullable = false)
     private String apellidom;
+
     @Column(nullable = false)
     private String password;
+
     @Column(nullable = false)
     private String nombre;
+
     @Column(nullable = false)
     private String apellidop;
+
     @Column(nullable = false)
     private String rut;
+
     private String telefono;
+
     @Column(nullable = false)
     private LocalDate fechaRegistro;
+
     private LocalDate ultimoLogin;
+
     private Boolean activo = true;
-    private String Direccion;
+
+    private String direccion;
+
     private LocalDate fechaNacimiento;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -49,25 +62,33 @@ public class Usuario implements UserDetails {
     @JoinColumn(name = "sucursal_id")
     private Sucursal sucursal;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente")
     private List<Pedido> pedidos = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "vendedor")
     private List<Pedido> pedidosVendidos = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<HistorialPrecio> historialPrecios = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<MovimientoInventario> movimientosInventario = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<HistorialEstadoPedido> historialEstadosPedido = new ArrayList<>();
 
-    public Usuario() {
-    }
+    public Usuario() {}
 
-    public Usuario(Long usuarioId, String email, String apellidom, String password, String nombre, String apellidop, String rut, String telefono, LocalDate fechaRegistro, LocalDate ultimoLogin, Boolean activo, String direccion, LocalDate fechaNacimiento, Comuna comuna, Rol rol, Sucursal sucursal, List<Pedido> pedidos, List<Pedido> pedidosVendidos, List<HistorialPrecio> historialPrecios, List<MovimientoInventario> movimientosInventario, List<HistorialEstadoPedido> historialEstadosPedido) {
+    public Usuario(Long usuarioId, String email, String apellidom, String password, String nombre, String apellidop,
+                   String rut, String telefono, LocalDate fechaRegistro, LocalDate ultimoLogin, Boolean activo,
+                   String direccion, LocalDate fechaNacimiento, Comuna comuna, Rol rol, Sucursal sucursal,
+                   List<Pedido> pedidos, List<Pedido> pedidosVendidos, List<HistorialPrecio> historialPrecios,
+                   List<MovimientoInventario> movimientosInventario, List<HistorialEstadoPedido> historialEstadosPedido) {
         this.usuarioId = usuarioId;
         this.email = email;
         this.apellidom = apellidom;
@@ -79,7 +100,7 @@ public class Usuario implements UserDetails {
         this.fechaRegistro = fechaRegistro;
         this.ultimoLogin = ultimoLogin;
         this.activo = activo;
-        this.Direccion = direccion;
+        this.direccion = direccion;
         this.fechaNacimiento = fechaNacimiento;
         this.comuna = comuna;
         this.rol = rol;
@@ -181,11 +202,11 @@ public class Usuario implements UserDetails {
     }
 
     public String getDireccion() {
-        return Direccion;
+        return direccion;
     }
 
     public void setDireccion(String direccion) {
-        Direccion = direccion;
+        this.direccion = direccion;
     }
 
     public LocalDate getFechaNacimiento() {

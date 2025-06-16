@@ -46,7 +46,6 @@ public class UsuarioService {
     @Transactional
     public RegistroClienteDTO registrarCliente(RegistroClienteDTO registroDTO) {
         Usuario usuario = clienteMapper.clienteRegistroDtoToUsuario(registroDTO);
-
         usuario.setPassword(passwordEncoder.encode(registroDTO.getPassword()));
 
         Comuna comuna = comunaRepository.findById(registroDTO.getComuna())
@@ -57,15 +56,19 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Rol no encontrada"));
         usuario.setRol(rol);
 
-        usuario = usuarioRepository.save(usuario);
-        return clienteMapper.usuarioToClienteResponseDto(usuario);
+        Usuario usuarioGuardado = usuarioRepository.save(usuario);
+
+        // Seteamos el ID en el DTO
+        registroDTO.setId(usuarioGuardado.getUsuarioId());
+        registroDTO.setPassword(null); // Evita devolver el password
+
+        return registroDTO;
     }
 
     // crear usuarios (bodeguero, vendedor, etc)
     @Transactional
     public RegistroUsuarioDTO registrarUsuario(RegistroUsuarioDTO registroDTO) {
         Usuario usuario = clienteMapper.usuarioregistrodtoToUsuario(registroDTO);
-
         usuario.setPassword(passwordEncoder.encode(registroDTO.getPassword()));
 
         Comuna comuna = comunaRepository.findById(registroDTO.getComuna())
@@ -80,11 +83,15 @@ public class UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Sucursal no encontrada"));
         usuario.setSucursal(sucursal);
 
-        usuario = usuarioRepository.save(usuario);
-        return clienteMapper.usuarioToUsuarioresponsedto(usuario);
+        Usuario usuarioGuardado = usuarioRepository.save(usuario);
+
+        // Seteamos el ID en el DTO
+        registroDTO.setId(usuarioGuardado.getUsuarioId());
+        registroDTO.setPassword(null); // Evita devolver el password
+
+        return registroDTO;
     }
 
-    // lista de usuarios (bodegueros, vendedores, etc)
     public List<UsuarioDTO> listarUsuarios() {
         List<Usuario> usuarios = usuarioRepository.findAllExceptRolId2();
         return usuarios.stream()
@@ -92,9 +99,8 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
-    // lista solo de clientes
     public List<ClienteDTO> listarClientes() {
-        List<Usuario> clientes = usuarioRepository.findByRolId(2L); // Ajustar el ID para que coincida con cliente
+        List<Usuario> clientes = usuarioRepository.findByRolId(2L);
         return clientes.stream()
                 .map(clienteMapper::usuarioToClienteDto)
                 .collect(Collectors.toList());
