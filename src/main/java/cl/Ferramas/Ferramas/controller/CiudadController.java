@@ -1,6 +1,9 @@
 package cl.Ferramas.Ferramas.controller;
 
+import cl.Ferramas.Ferramas.dto.CiudadDTO;
+import cl.Ferramas.Ferramas.dto.RegionDTO;
 import cl.Ferramas.Ferramas.entity.Ciudad;
+import cl.Ferramas.Ferramas.mapper.CiudadMapper;
 import cl.Ferramas.Ferramas.services.CiudadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -10,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/ciudad")
@@ -17,11 +21,17 @@ public class CiudadController {
 
     @Autowired
     private CiudadService ciudadService;
+    @Autowired
+    private CiudadMapper ciudadMapper;
 
     @GetMapping
-    public List<Ciudad> getAll() {
-        return ciudadService.listarCiudades();
+    public List<CiudadDTO> getAll() {
+
+        return ciudadService.listarCiudades().stream().map(ciudadMapper::toDTO).collect(Collectors.toList());
     }
+
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Ciudad> getById(@PathVariable Long id) {
@@ -29,6 +39,8 @@ public class CiudadController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+
 
     @PostMapping
     public Ciudad create(@RequestBody Ciudad ciudad) {
